@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ManageData"
+    tools:showIn="@layout/activity_manage_data">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Personnel"
+            android:id="@+id/btnPersonnel"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textSize="16sp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Roles"
+            android:id="@+id/btnRoles"
+            android:textSize="16sp"
+            android:layout_below="@+id/btnPersonnel"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="37dp"
+            android:layout_alignRight="@+id/btnPersonnel"
+            android:layout_alignEnd="@+id/btnPersonnel"
+            android:layout_row="1"
+            android:layout_column="0"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Incidents"
+            android:id="@+id/btnIncidents"
+            android:textSize="16sp"
+            android:layout_below="@+id/btnPersonnel"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="37dp"
+            android:layout_alignRight="@+id/btnPersonnel"
+            android:layout_alignEnd="@+id/btnPersonnel"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_gravity="center_horizontal"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submitted Forms"
+            android:id="@+id/btnSubmittedForms"
+            android:textSize="16sp"
+            android:layout_below="@+id/btnPersonnel"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="37dp"
+            android:layout_alignRight="@+id/btnPersonnel"
+            android:layout_alignEnd="@+id/btnPersonnel"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+</RelativeLayout>
