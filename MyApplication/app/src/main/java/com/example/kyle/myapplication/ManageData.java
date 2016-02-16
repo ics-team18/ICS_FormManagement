@@ -23,7 +23,8 @@ public class ManageData extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                startActivity(new Intent(getApplicationContext(), AddPersonnel.class));
+                Register.fromHomeScreen(false);
+                startActivity(new Intent(getApplicationContext(), Register.class));
             }
         });
 

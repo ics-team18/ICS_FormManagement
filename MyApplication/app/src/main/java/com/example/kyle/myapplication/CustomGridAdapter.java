@@ -33,7 +33,7 @@ public class CustomGridAdapter extends BaseAdapter
             @Override
             public int compare(Abstract_Table a, Abstract_Table b)
             {
-                return  a.getDataGridDisplayValue().compareToIgnoreCase(b.getDataGridDisplayValue());
+                return a.getDataGridDisplayValue().compareToIgnoreCase(b.getDataGridDisplayValue());
             }
         });
         this.valueList = valueList;

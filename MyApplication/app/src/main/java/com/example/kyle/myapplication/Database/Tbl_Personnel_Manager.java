@@ -22,6 +22,7 @@ public class Tbl_Personnel_Manager extends Abstract_Table_Manager<Tbl_Personnel>
         PASSWORD,
         MOBILEPHONE,
         TITLE,
+        ISSUPERVISOR,
     }
 
     @Override
@@ -40,12 +41,13 @@ public class Tbl_Personnel_Manager extends Abstract_Table_Manager<Tbl_Personnel>
     public String GetCreateScript()
     {
         return Attributes.PERSONNELID.name() + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                Attributes.FIRSTNAME.name() + " TEXT, " +
-                Attributes.LASTNAME.name() + " TEXT, " +
-                Attributes.EMAIL.name() + " TEXT, " +
+                Attributes.FIRSTNAME.name() + " TEXT COLLATE NOCASE, " +
+                Attributes.LASTNAME.name() + " TEXT COLLATE NOCASE, " +
+                Attributes.EMAIL.name() + " TEXT COLLATE NOCASE, " +
                 Attributes.PASSWORD.name() + " TEXT, " +
-                Attributes.MOBILEPHONE.name() + " TEXT, " +
-                Attributes.TITLE.name() + " TEXT";
+                Attributes.MOBILEPHONE.name() + " TEXT COLLATE NOCASE, " +
+                Attributes.TITLE.name() + " TEXT COLLATE NOCASE," +
+                Attributes.ISSUPERVISOR.name() + " INTEGER";
     }
 
     @Override
@@ -54,32 +56,37 @@ public class Tbl_Personnel_Manager extends Abstract_Table_Manager<Tbl_Personnel>
         String whereClause = "";
         if (searchCritera.personnelID > -1)
         {
-            whereClause += Attributes.PERSONNELID.name() + " = " + Integer.toString(searchCritera.personnelID);
+            whereClause += " AND " + Attributes.PERSONNELID.name() + " = '" + Integer.toString(searchCritera.personnelID) + "'";
         }
         if (!searchCritera.firstName.isEmpty())
         {
-            whereClause += Attributes.FIRSTNAME.name() + " = " + searchCritera.firstName;
+            whereClause += " AND " + Attributes.FIRSTNAME.name() + " = '" + searchCritera.firstName + "'";
         }
         if (!searchCritera.lastName.isEmpty())
         {
-            whereClause += Attributes.LASTNAME.name() + " = " + searchCritera.lastName;
+            whereClause += " AND " + Attributes.LASTNAME.name() + " = '" + searchCritera.lastName + "'";
         }
         if (!searchCritera.email.isEmpty())
         {
-            whereClause += Attributes.EMAIL.name() + " = " + searchCritera.email;
+            whereClause += " AND " + Attributes.EMAIL.name() + " = '" + searchCritera.email + "'";
         }
         if (!searchCritera.password.isEmpty())
         {
-            whereClause += Attributes.PASSWORD.name() + " = " + searchCritera.password;
+            whereClause += " AND " + Attributes.PASSWORD.name() + " = '" + searchCritera.password + "'";
         }
         if (!searchCritera.mobilePhone.isEmpty())
         {
-            whereClause += Attributes.MOBILEPHONE.name() + " = " + searchCritera.mobilePhone;
+            whereClause += " AND " + Attributes.MOBILEPHONE.name() + " = '" + searchCritera.mobilePhone + "'";
         }
         if (!searchCritera.title.isEmpty())
         {
-            whereClause += Attributes.TITLE.name() + " = " + searchCritera.title;
+            whereClause += " AND " + Attributes.TITLE.name() + " = '" + searchCritera.title + "'";
         }
+        if (searchCritera.isSupervisor != null)
+        {
+            whereClause += " AND " + Attributes.ISSUPERVISOR.name() + " = " + Integer.toString(searchCritera.isSupervisor ? 1 : 0) + "";
+        }
+
         return whereClause;
     }
 
@@ -93,6 +100,7 @@ public class Tbl_Personnel_Manager extends Abstract_Table_Manager<Tbl_Personnel>
         values.put(Attributes.PASSWORD.name(), record.password);
         values.put(Attributes.MOBILEPHONE.name(), record.mobilePhone);
         values.put(Attributes.TITLE.name(), record.title);
+        values.put(Attributes.ISSUPERVISOR.name(), record.isSupervisor);
         if (isUpdate)
         {
             values.put(Attributes.PERSONNELID.name(), record.personnelID);
@@ -120,6 +128,7 @@ public class Tbl_Personnel_Manager extends Abstract_Table_Manager<Tbl_Personnel>
             record.password = cursor.getString(Attributes.PASSWORD.ordinal());
             record.mobilePhone = cursor.getString(Attributes.MOBILEPHONE.ordinal());
             record.title = cursor.getString(Attributes.TITLE.ordinal());
+            record.isSupervisor = cursor.getInt(Attributes.ISSUPERVISOR.ordinal()) != 0;
             resultList.add(record);
         }
         return resultList;

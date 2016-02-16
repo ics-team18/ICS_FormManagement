@@ -12,12 +12,13 @@ public class Tbl_Personnel extends Abstract_Table
     public String password = "";
     public String mobilePhone = "";
     public String title = "";
+    public Boolean isSupervisor = null;
 
     public Tbl_Personnel()
     {
     }
 
-    public Tbl_Personnel(String firstName, String lastName, String email, String password, String mobilePhone, String title)
+    public Tbl_Personnel(String firstName, String lastName, String email, String password, String mobilePhone, String title, Boolean isSupervisor)
     {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -25,6 +26,7 @@ public class Tbl_Personnel extends Abstract_Table
         this.password = password;
         this.mobilePhone = mobilePhone;
         this.title = title;
+        this.isSupervisor = isSupervisor;
     }
 
     @Override
@@ -80,6 +82,7 @@ public class Tbl_Personnel extends Abstract_Table
                 "Email: " + this.email + "\n" +
                 "Password: " + this.password + "\n" +
                 "Mobile Phone: " + this.mobilePhone + "\n" +
-                "Title: " + this.title;
+                "Title: " + this.title + "\n" +
+                "Supervisor?: " + (this.isSupervisor ? "Yes":"No");
     }
 }

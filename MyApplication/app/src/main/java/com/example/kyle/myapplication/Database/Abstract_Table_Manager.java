@@ -54,9 +54,10 @@ public abstract class Abstract_Table_Manager<T>
             if (!whereClause.isEmpty())
             {
                 whereClause = "WHERE " + whereClause;
+                whereClause = whereClause.replace("WHERE  AND ", "WHERE ");
             }
         }
-        Cursor result =  db.rawQuery("SELECT * FROM " + GetTableName() + " " + whereClause, null);
+        Cursor result = db.rawQuery("SELECT * FROM " + GetTableName() + " " + whereClause, null);
         List<T> resultList = GetList(result);
         return resultList;
     }
