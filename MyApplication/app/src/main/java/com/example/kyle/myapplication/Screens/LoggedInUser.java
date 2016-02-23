@@ -1,4 +1,4 @@
-package com.example.kyle.myapplication;
+package com.example.kyle.myapplication.Screens;
 
 import com.example.kyle.myapplication.Database.Tbl_Personnel;
 

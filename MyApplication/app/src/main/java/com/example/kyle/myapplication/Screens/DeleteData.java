@@ -1,4 +1,4 @@
-package com.example.kyle.myapplication;
+package com.example.kyle.myapplication.Screens;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,6 +14,7 @@ import com.example.kyle.myapplication.Database.Abstract_Table;
 import com.example.kyle.myapplication.Database.Database_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Tbl_Personnel_Manager;
+import com.example.kyle.myapplication.R;
 
 import java.util.ArrayList;
 import java.util.List;

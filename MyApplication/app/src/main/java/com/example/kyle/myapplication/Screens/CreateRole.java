@@ -1,7 +1,9 @@
-package com.example.kyle.myapplication;
+package com.example.kyle.myapplication.Screens;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.kyle.myapplication.R;
 
 public class CreateRole extends AppCompatActivity {
 

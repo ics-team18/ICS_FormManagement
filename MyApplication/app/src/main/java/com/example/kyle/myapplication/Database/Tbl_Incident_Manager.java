@@ -18,8 +18,11 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
         INCIDENTID,
         STARTTIME,
         ENDTIME,
-        LOCATION,
         DESCRIPTION,
+        ADDRESS,
+        CITYSTZIP,
+        LATITUDE,
+        LONGITUDE,
     }
 
     @Override
@@ -40,8 +43,11 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
         return Attributes.INCIDENTID.name() + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 Attributes.STARTTIME.name() + " TEXT, " +
                 Attributes.ENDTIME.name() + " TEXT, " +
-                Attributes.LOCATION.name() + " TEXT, " +
-                Attributes.DESCRIPTION.name() + " TEXT";
+                Attributes.DESCRIPTION.name() + " TEXT, " +
+                Attributes.ADDRESS.name() + " TEXT, " +
+                Attributes.CITYSTZIP.name() + " TEXT, " +
+                Attributes.LATITUDE.name() + " REAL, " +
+                Attributes.LONGITUDE.name() + " REAL";
     }
 
     @Override
@@ -60,13 +66,25 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
         {
             whereClause += Attributes.ENDTIME.name() + " = " + searchCritera.endTime;
         }
-        if (!searchCritera.location.isEmpty())
-        {
-            whereClause += Attributes.LOCATION.name() + " = " + searchCritera.location;
-        }
         if (!searchCritera.description.isEmpty())
         {
             whereClause += Attributes.DESCRIPTION.name() + " = " + searchCritera.description;
+        }
+        if (!searchCritera.address.isEmpty())
+        {
+            whereClause += Attributes.ADDRESS.name() + " = " + searchCritera.address;
+        }
+        if (!searchCritera.citySTZip.isEmpty())
+        {
+            whereClause += Attributes.CITYSTZIP.name() + " = " + searchCritera.citySTZip;
+        }
+        if (searchCritera.latitude != 0.0)
+        {
+            whereClause += Attributes.LATITUDE.name() + " = " + Double.toString(searchCritera.latitude);
+        }
+        if (searchCritera.longitude != 0.0)
+        {
+            whereClause += Attributes.LONGITUDE.name() + " = " + Double.toString(searchCritera.longitude);
         }
         return whereClause;
     }
@@ -77,8 +95,11 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
         ContentValues values = new ContentValues();
         values.put(Attributes.STARTTIME.name(), record.startTime);
         values.put(Attributes.ENDTIME.name(), record.endTime);
-        values.put(Attributes.LOCATION.name(), record.location);
         values.put(Attributes.DESCRIPTION.name(), record.description);
+        values.put(Attributes.ADDRESS.name(), record.address);
+        values.put(Attributes.CITYSTZIP.name(), record.citySTZip);
+        values.put(Attributes.LATITUDE.name(), record.latitude);
+        values.put(Attributes.LONGITUDE.name(), record.longitude);
         if (isUpdate)
         {
             values.put(Attributes.INCIDENTID.name(), record.incidentID);
@@ -102,8 +123,11 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
             record.incidentID = cursor.getInt(Attributes.INCIDENTID.ordinal());
             record.startTime = cursor.getString(Attributes.STARTTIME.ordinal());
             record.endTime = cursor.getString(Attributes.ENDTIME.ordinal());
-            record.location = cursor.getString(Attributes.LOCATION.ordinal());
             record.description = cursor.getString(Attributes.DESCRIPTION.ordinal());
+            record.address = cursor.getString(Attributes.ADDRESS.ordinal());
+            record.citySTZip = cursor.getString(Attributes.CITYSTZIP.ordinal());
+            record.latitude = cursor.getDouble(Attributes.LATITUDE.ordinal());
+            record.longitude = cursor.getDouble(Attributes.LONGITUDE.ordinal());
             resultList.add(record);
         }
         return resultList;

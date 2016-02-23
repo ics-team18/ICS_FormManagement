@@ -1,42 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    tools:context=".MainScreen">
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Screens.MainScreen"
+    tools:showIn="@layout/activity_main_screen">
 
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Active Incidents:"
-        android:id="@+id/lblActiveIncidents"/>
+        android:layout_height="match_parent">
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ActiveIncidents">
-        <TableRow android:layout_width="match_parent"
-                  android:layout_height="wrap_content" android:background="#f00"/>
-    </TableLayout>
+        <TextView
+            android:id="@+id/lblActiveIncidents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Active Incidents:"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Select Incident"
-        android:id="@+id/btnSelectIncident"/>
+        <Button
+            android:id="@+id/btnSelectIncident"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="37dp"
+            android:text="Select Incident"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create Incident"
-        android:id="@+id/btnCreateIncident"/>
+        <Button
+            android:id="@+id/btnCreateIncident"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="37dp"
+            android:text="Create Incident"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Manage Data"
-        android:id="@+id/btnManageData"
-        android:layout_gravity="center_horizontal"/>
-</LinearLayout>
+        <Button
+            android:id="@+id/btnManageData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="37dp"
+            android:text="Manage Data"/>
+    </LinearLayout>
+</RelativeLayout>

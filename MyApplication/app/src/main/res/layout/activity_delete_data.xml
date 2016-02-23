@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".DeleteData">
+    tools:context=".Screens.DeleteData">
 
     <include layout="@layout/content_delete_data"/>
 

@@ -62,6 +62,19 @@ public abstract class Abstract_Table_Manager<T>
         return resultList;
     }
 
+    public int GetNextID(SQLiteDatabase db)
+    {
+        String query = "SELECT SEQ FROM SQLITE_SEQUENCE WHERE NAME = '" + GetTableName() + "'";
+        int id = 1;
+        Cursor result = db.rawQuery(query, null);
+        if(result.moveToFirst())
+        {
+            id = result.getInt(0);
+            ++id;
+        }
+        return id;
+    }
+
     public abstract String GetPrimaryKey();
 
     public abstract String GetPrimaryKeyValue(T record);

@@ -1,4 +1,4 @@
-package com.example.kyle.myapplication;
+package com.example.kyle.myapplication.Screens;
 
 import android.content.Context;
 import android.util.Pair;

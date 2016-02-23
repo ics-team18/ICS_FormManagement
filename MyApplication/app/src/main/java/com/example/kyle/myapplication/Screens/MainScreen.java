@@ -1,12 +1,12 @@
-package com.example.kyle.myapplication;
+package com.example.kyle.myapplication.Screens;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+
+import com.example.kyle.myapplication.R;
 
 public class MainScreen extends AppCompatActivity {
 
@@ -56,7 +56,7 @@ public class MainScreen extends AppCompatActivity {
 
     private void createIncident()
     {
-        //startActivity(new Intent(this, CreateIncident.class));
+        startActivity(new Intent(this, CreateIncident.class));
     }
 
     private void manageData()

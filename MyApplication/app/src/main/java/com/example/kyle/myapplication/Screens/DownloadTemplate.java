@@ -1,4 +1,4 @@
-package com.example.kyle.myapplication;
+package com.example.kyle.myapplication.Screens;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.example.kyle.myapplication.R;
+import com.example.kyle.myapplication.Screens.DownloadTemplateSpinnerListener;
 
 public class DownloadTemplate extends Activity {
 

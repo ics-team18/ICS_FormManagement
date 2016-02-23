@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    tools:context=".CreateRole">
+    tools:context=".Screens.CreateRole">
 
     <TextView
         android:layout_width="match_parent"

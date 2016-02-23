@@ -4,35 +4,46 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login">
+        <activity android:name=".Screens.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Register">
+        <activity android:name=".Screens.Register">
         </activity>
-        <activity android:name=".MainScreen"
+        <activity
+            android:name=".Screens.MainScreen"
             android:label="@string/title_activity_main_screen"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".CreateRole">
+        <activity android:name=".Screens.CreateRole">
         </activity>
-        <activity android:name=".DeleteData"
+        <activity
+            android:name=".Screens.DeleteData"
             android:label="@string/title_activity_delete_data"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".ManageData"
+        <activity
+            android:name=".Screens.ManageData"
             android:label="@string/title_activity_manage_data"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".DownloadTemplate">
+        <activity android:name=".Screens.DownloadTemplate">
+        </activity>
+        <activity
+            android:name=".Screens.CreateIncident"
+            android:label="@string/title_activity_main_screen"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->

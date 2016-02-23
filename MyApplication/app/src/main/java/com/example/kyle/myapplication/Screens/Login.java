@@ -1,4 +1,4 @@
-package com.example.kyle.myapplication;
+package com.example.kyle.myapplication.Screens;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,10 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.kyle.myapplication.Database.Abstract_Table;
 import com.example.kyle.myapplication.Database.Database_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Tbl_Personnel_Manager;
+import com.example.kyle.myapplication.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +63,8 @@ public class Login extends AppCompatActivity
         Tbl_Personnel searchCriteria = new Tbl_Personnel();
         searchCriteria.email = txtEmail.getText().toString();
         searchCriteria.password = txtPassword.getText().toString();
-        /* for dev purposes we will leave this empty
-        if (searchCriteria.email.isEmpty())
+        // for dev purposes we will leave this empty
+        /*if (searchCriteria.email.isEmpty())
         {
             Toast.makeText(this, "E-mail address is required.", Toast.LENGTH_LONG).show();
         }

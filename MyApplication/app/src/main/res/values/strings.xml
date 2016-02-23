@@ -4,6 +4,7 @@
     <string name="title_activity_delete_data">Delete</string>
     <string name="title_activity_manage_data">Manage Data</string>
     <string name="title_activity_main_screen">Main Screen</string>
+    <string name="title_activity_create_incident">Create Incident</string>
     <string name="title_activity_download_template">Download Template</string>
 
     // Below values are for Download Template Screen
