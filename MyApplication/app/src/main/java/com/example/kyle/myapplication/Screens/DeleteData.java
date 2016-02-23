@@ -12,8 +12,11 @@ import android.widget.Toast;
 
 import com.example.kyle.myapplication.Database.Abstract_Table;
 import com.example.kyle.myapplication.Database.Database_Manager;
+import com.example.kyle.myapplication.Database.Tbl_Incident;
+import com.example.kyle.myapplication.Database.Tbl_Incident_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Tbl_Personnel_Manager;
+import com.example.kyle.myapplication.CustomControls.CustomGridAdapter;
 import com.example.kyle.myapplication.R;
 
 import java.util.ArrayList;
@@ -67,7 +70,7 @@ public class DeleteData extends AppCompatActivity
                 //valueList = new ArrayList<Abstract_Table>(Tbl_Role_Manager.current.Select(db.getReadableDatabase()));
                 break;
             case INCIDENT:
-                //valueList = new ArrayList<Abstract_Table>(Tbl_Incident_Manager.current.Select(db.getReadableDatabase()));
+                valueList = new ArrayList<Abstract_Table>(Tbl_Incident_Manager.current.Select(db.getReadableDatabase()));
                 break;
             case SUBMITTEDFORMS:
                 //valueList = new ArrayList<Abstract_Table>(Tbl_SubmittedForms_Manager.current.Select(db.getReadableDatabase()));
@@ -114,7 +117,7 @@ public class DeleteData extends AppCompatActivity
                                     //Tbl_Role_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Role) selectedRecord);
                                     break;
                                 case INCIDENT:
-                                    //Tbl_Incident_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Incident) selectedRecord);
+                                    Tbl_Incident_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Incident) selectedRecord);
                                     break;
                                 case SUBMITTEDFORMS:
                                     //Tbl_SubmittedForms_Manager.current.Delete(db.getWritableDatabase(), (Tbl_SubmittedForms) selectedRecord);

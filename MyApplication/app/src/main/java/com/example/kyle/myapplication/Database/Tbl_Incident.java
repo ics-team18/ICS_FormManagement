@@ -18,9 +18,8 @@ public class Tbl_Incident extends Abstract_Table
     {
     }
 
-    public Tbl_Incident(int incidentID, String startTime, String endTime, String description, String address, String citySTZip, double latitude, double longitude)
+    public Tbl_Incident(String startTime, String endTime, String description, String address, String citySTZip, double latitude, double longitude)
     {
-        this.incidentID = incidentID;
         this.startTime = startTime;
         this.endTime = endTime;
         this.description = description;

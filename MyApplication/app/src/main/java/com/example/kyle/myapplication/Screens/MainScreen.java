@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.kyle.myapplication.Helpers.LoggedInUser;
 import com.example.kyle.myapplication.R;
 
 public class MainScreen extends AppCompatActivity {

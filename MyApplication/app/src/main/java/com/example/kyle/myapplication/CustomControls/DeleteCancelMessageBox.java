@@ -1,4 +1,4 @@
-package com.example.kyle.myapplication.Screens;
+package com.example.kyle.myapplication.CustomControls;
 
 import android.app.Activity;
 import android.app.AlertDialog;

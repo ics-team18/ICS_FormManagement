@@ -44,7 +44,8 @@ public class ManageData extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                //todo
+                DeleteData.SetSpecificTable(DeleteData.Table.INCIDENT);
+                startActivity(new Intent(getApplicationContext(), DeleteData.class));
             }
         });
 

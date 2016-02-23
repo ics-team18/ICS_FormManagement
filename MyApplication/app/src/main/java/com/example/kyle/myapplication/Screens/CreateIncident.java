@@ -187,14 +187,14 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
         {
             longitude = Double.parseDouble(longitudeStr);
         }
-        Tbl_Incident record = new Tbl_Incident(incidentID, startDate, endDate, description, address, citySTZip, latitude, longitude);
+        Tbl_Incident record = new Tbl_Incident(startDate, endDate, description, address, citySTZip, latitude, longitude);
         String anyErrors = record.isValidRecord();
         if (anyErrors.isEmpty())
         {
+            clear();
             Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), record);
             Toast.makeText(this, "Incident Created", Toast.LENGTH_LONG).show();
             //instead of showing a message go to the manage incident screen
-            clear();
         }
         else
         {
@@ -234,11 +234,19 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
                         }
                     }
                     String[] totalAddress = builder.toString().split("\n");
-                    address = totalAddress[0];
-                    citySTZip = totalAddress[1];
+                    if (totalAddress.length == 1)
+                    {
+                        citySTZip = totalAddress[0];
+                    }
+                    else
+                    {
+                        address = totalAddress[0];
+                        citySTZip = totalAddress[1];
+                    }
                 }
                 catch (Exception e)
                 {
+                    Toast.makeText(this, "Unable to retrieve your current location.\nMake sure that Location Services is enabled.", Toast.LENGTH_LONG).show();
                 }
                 txtAddress.setText(address);
                 txtCitySTZip.setText(citySTZip);
@@ -265,5 +273,4 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
     {
 
     }
-
 }

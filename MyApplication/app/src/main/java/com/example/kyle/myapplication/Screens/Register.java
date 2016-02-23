@@ -14,31 +14,33 @@ import android.widget.Toast;
 import com.example.kyle.myapplication.Database.Database_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Tbl_Personnel_Manager;
+import com.example.kyle.myapplication.Helpers.LoggedInUser;
 import com.example.kyle.myapplication.R;
 
 public class Register extends AppCompatActivity
 {
-    Database_Manager db;
-    EditText txtFirstName, txtLastName, txtPositionTitle, txtEmail, txtPassword, txtConfirmPassword;
-    CheckBox chkIsSupervisor;
-    static int btnDeleteVisibility = View.GONE;
+    private Database_Manager db;
+    private EditText txtFirstName, txtLastName, txtPositionTitle, txtPhoneNumber, txtEmail, txtPassword, txtConfirmPassword;
+    private CheckBox chkIsSupervisor;
+    private static int btnDeleteVisibility = View.GONE;
+    private static boolean fromLoginScreen = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         db = new Database_Manager(this);
-        Button btnRegister = (Button) findViewById(R.id.btnRegister);
-        Button btnClear = (Button) findViewById(R.id.btnClear);
-        Button btnDelete = (Button) findViewById(R.id.btnDelete);
-        btnDelete.setVisibility(btnDeleteVisibility);
         txtFirstName = (EditText) findViewById(R.id.txtFirstName);
         txtLastName = (EditText) findViewById(R.id.txtLastName);
         txtPositionTitle = (EditText) findViewById(R.id.txtPositionTitle);
+        txtPhoneNumber = (EditText) findViewById(R.id.txtPhoneNumber);
         txtEmail = (EditText) findViewById(R.id.txtEmail);
         txtPassword = (EditText) findViewById(R.id.txtPassword);
         txtConfirmPassword = (EditText) findViewById(R.id.txtConfirmPassword);
         chkIsSupervisor = (CheckBox) findViewById(R.id.chkIsSupervisor);
+
+        Button btnRegister = (Button) findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -48,6 +50,7 @@ public class Register extends AppCompatActivity
             }
         });
 
+        Button btnClear = (Button) findViewById(R.id.btnClear);
         btnClear.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -57,12 +60,39 @@ public class Register extends AppCompatActivity
             }
         });
 
+        Button btnDelete = (Button) findViewById(R.id.btnDelete);
+
+        if (fromLoginScreen)
+        {
+            //if we are coming from the login screen then the button will always be invisible
+            btnDeleteVisibility = View.GONE;
+            //if we are coming from the login screen then it is likely the user is setting up their own account
+            //so use the user's phone number
+            setUsersPhoneNumber();
+        }
+        else
+        {
+            //otherwise we will check to see if the user has access to delete
+            btnDeleteVisibility = LoggedInUser.User.isSupervisor ? View.VISIBLE : View.GONE;
+        }
+
+        btnDelete.setVisibility(btnDeleteVisibility);
         btnDelete.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
                 delete();
+            }
+        });
+
+        Button btnPhoneNumber = (Button) findViewById(R.id.btnPhoneNumber);
+        btnPhoneNumber.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                setUsersPhoneNumber();
             }
         });
 
@@ -81,19 +111,8 @@ public class Register extends AppCompatActivity
             String firstName = txtFirstName.getText().toString();
             String lastName = txtLastName.getText().toString();
             String email = txtEmail.getText().toString();
-            String mobilePhone = "123-456-7890";
-            try
-            {
-                TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                mobilePhone = tm.getLine1Number();
-            }
-            catch (Exception ex)
-            {
-                // unable to get the mobile phone number
-                // this should only happen for development because the emulator doesn't have a phone number
-                Toast.makeText(this, "Phone number not found, using default phone number", Toast.LENGTH_LONG).show();
-            }
             String title = txtPositionTitle.getText().toString();
+            String mobilePhone = txtPhoneNumber.getText().toString();
             Boolean isSupervisor = chkIsSupervisor.isChecked();
             Tbl_Personnel record = new Tbl_Personnel(firstName, lastName, email, password, mobilePhone, title, isSupervisor);
             String anyErrors = record.isValidRecord();
@@ -119,6 +138,7 @@ public class Register extends AppCompatActivity
         txtPassword.setText("");
         txtConfirmPassword.setText("");
         chkIsSupervisor.setChecked(false);
+        txtPhoneNumber.setText("");
     }
 
     private void delete()
@@ -127,17 +147,26 @@ public class Register extends AppCompatActivity
         startActivity(new Intent(getApplicationContext(), DeleteData.class));
     }
 
-    public static void fromHomeScreen(boolean fromLoginScreen)
+    private void setUsersPhoneNumber()
     {
-        if (fromLoginScreen)
+        String mobilePhone = "123-456-7890";
+        try
         {
-            //if we are coming from the login screen then the button will always be invisible
-            btnDeleteVisibility = View.GONE;
+            TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            mobilePhone = tm.getLine1Number();
         }
-        else
+        catch (Exception ex)
         {
-         //otherwise we will check to see if the user has access to delete
-            btnDeleteVisibility = LoggedInUser.User.isSupervisor? View.VISIBLE : View.GONE;
+            // unable to get the mobile phone number
+            // this should only happen for development because the emulator doesn't have a phone number
+            Toast.makeText(this, "Phone number not found, using default phone number", Toast.LENGTH_LONG).show();
         }
+
+        txtPhoneNumber.setText(mobilePhone);
+    }
+
+    public static void fromHomeScreen(boolean fromLogin)
+    {
+        fromLoginScreen = fromLogin;
     }
 }

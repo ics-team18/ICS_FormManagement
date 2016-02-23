@@ -59,7 +59,27 @@
             android:id="@+id/txtPositionTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:nextFocusDown="@+id/txtPhoneNumber"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Use my number"
+            android:id="@+id/btnPhoneNumber"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone Number"
+            android:id="@+id/lblPhoneNumber"/>
+
+        <EditText
+            android:id="@+id/txtPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:inputType="phone"/>
 
         <TextView
             android:layout_width="wrap_content"
