@@ -13,7 +13,7 @@ public class Tbl_Personnel_Manager extends Abstract_Table_Manager<Tbl_Personnel>
 {
     public static Tbl_Personnel_Manager current = new Tbl_Personnel_Manager();
 
-    public static enum Attributes
+    public enum Attributes
     {
         PERSONNELID,
         FIRSTNAME,
@@ -34,7 +34,7 @@ public class Tbl_Personnel_Manager extends Abstract_Table_Manager<Tbl_Personnel>
     @Override
     public String GetTableName()
     {
-        return "Tbl_Personnel";
+        return Tbl_Personnel.class.getSimpleName();
     }
 
     @Override

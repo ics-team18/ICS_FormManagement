@@ -13,7 +13,7 @@ public class Tbl_Role_Manager extends Abstract_Table_Manager<Tbl_Role>
 {
     public static Tbl_Role_Manager current = new Tbl_Role_Manager();
 
-    public static enum Attributes
+    public enum Attributes
     {
         ROLEID,
         RANKING,
@@ -29,7 +29,7 @@ public class Tbl_Role_Manager extends Abstract_Table_Manager<Tbl_Role>
     @Override
     public String GetTableName()
     {
-        return "Tbl_Role";
+        return Tbl_Role.class.getSimpleName();
     }
 
     @Override
@@ -48,10 +48,6 @@ public class Tbl_Role_Manager extends Abstract_Table_Manager<Tbl_Role>
         {
             whereClause += Attributes.ROLEID.name() + " = " + Integer.toString(searchCritera.roleID);
         }
-        if (searchCritera.ranking > -1)
-        {
-            whereClause += Attributes.RANKING.name() + " = " + searchCritera.ranking;
-        }
         if (!searchCritera.title.isEmpty())
         {
             whereClause += Attributes.TITLE.name() + " = " + searchCritera.title;
@@ -63,7 +59,6 @@ public class Tbl_Role_Manager extends Abstract_Table_Manager<Tbl_Role>
     public ContentValues GetContentValues(Tbl_Role record, boolean isUpdate)
     {
         ContentValues values = new ContentValues();
-        values.put(Attributes.RANKING.name(), record.ranking);
         values.put(Attributes.TITLE.name(), record.title);
         if (isUpdate)
         {
@@ -86,7 +81,6 @@ public class Tbl_Role_Manager extends Abstract_Table_Manager<Tbl_Role>
         {
             Tbl_Role record = new Tbl_Role();
             record.roleID = cursor.getInt(Attributes.ROLEID.ordinal());
-            record.ranking = cursor.getInt(Attributes.RANKING.ordinal());
             record.title = cursor.getString(Attributes.TITLE.ordinal());
             resultList.add(record);
         }

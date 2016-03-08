@@ -13,7 +13,7 @@ public class Tbl_SubmittedForms_Manager extends Abstract_Table_Manager<Tbl_Submi
 {
     public static Tbl_SubmittedForms_Manager current = new Tbl_SubmittedForms_Manager();
 
-    public static enum Attributes
+    public enum Attributes
     {
         FORMID,
         INCIDENTID,
@@ -31,7 +31,7 @@ public class Tbl_SubmittedForms_Manager extends Abstract_Table_Manager<Tbl_Submi
     @Override
     public String GetTableName()
     {
-        return "Tbl_SubmittedForms";
+        return Tbl_SubmittedForms.class.getSimpleName();
     }
 
     @Override

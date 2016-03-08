@@ -2,6 +2,7 @@ package com.example.kyle.myapplication.Database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
 {
     public static Tbl_Incident_Manager current = new Tbl_Incident_Manager();
 
-    public static enum Attributes
+    public enum Attributes
     {
         INCIDENTID,
         STARTTIME,
@@ -26,6 +27,56 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
     }
 
     @Override
+    public List<Tbl_Incident> Select(SQLiteDatabase db, Tbl_Incident searchCriteria)
+    {
+        List<Tbl_Incident> incidentList = super.Select(db, searchCriteria);
+        for (int i = 0; i < incidentList.size(); i++)
+        {
+            Tbl_Incident incident = incidentList.get(i);
+            Tbl_IncidentLink linkSearchCriteria = new Tbl_IncidentLink();
+            linkSearchCriteria.incidentID = incident.incidentID;
+            incident.incidentLinks = Tbl_IncidentLink_Manager.current.Select(db, linkSearchCriteria);
+        }
+        return incidentList;
+    }
+
+    @Override
+    public boolean Insert(SQLiteDatabase db, Tbl_Incident toInsert)
+    {
+        boolean error = super.Insert(db, toInsert);
+        if (!error)
+        {
+            for (int i = 0; i < toInsert.incidentLinks.size(); i++)
+            {
+                error = Tbl_IncidentLink_Manager.current.Insert(db, toInsert.incidentLinks.get(i));
+                if (error)
+                {
+                    break;
+                }
+            }
+        }
+        return error;
+    }
+
+    @Override
+    public boolean Update(SQLiteDatabase db, Tbl_Incident toUpdate)
+    {
+        boolean error = super.Insert(db, toUpdate);
+        if (!error)
+        {
+            for (int i = 0; i < toUpdate.incidentLinks.size(); i++)
+            {
+                error = Tbl_IncidentLink_Manager.current.Update(db, toUpdate.incidentLinks.get(i));
+                if (error)
+                {
+                    break;
+                }
+            }
+        }
+        return error;
+    }
+
+    @Override
     public String GetPrimaryKey()
     {
         return Attributes.INCIDENTID.name();
@@ -34,7 +85,7 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
     @Override
     public String GetTableName()
     {
-        return "Tbl_Incident";
+        return Tbl_Incident.class.getSimpleName();
     }
 
     @Override

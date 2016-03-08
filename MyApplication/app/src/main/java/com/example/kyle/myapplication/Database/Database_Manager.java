@@ -25,6 +25,7 @@ public class Database_Manager extends SQLiteOpenHelper
         Tbl_Personnel_Manager.current.Create(db);
         Tbl_Role_Manager.current.Create(db);
         Tbl_Incident_Manager.current.Create(db);
+        Tbl_IncidentLink_Manager.current.Create(db);
         Tbl_SubmittedForms_Manager.current.Create(db);
     }
 
@@ -35,6 +36,7 @@ public class Database_Manager extends SQLiteOpenHelper
         tableList.add(Tbl_Personnel_Manager.current.GetTableName());
         tableList.add(Tbl_Role_Manager.current.GetTableName());
         tableList.add(Tbl_Incident_Manager.current.GetTableName());
+        tableList.add(Tbl_IncidentLink_Manager.current.GetTableName());
         tableList.add(Tbl_SubmittedForms_Manager.current.GetTableName());
         for (String table : tableList)
         {

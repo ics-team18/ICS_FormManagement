@@ -25,6 +25,7 @@ public abstract class Abstract_Table_Manager<T>
         db.execSQL("CREATE TABLE IF NOT EXISTS " + GetTableName() + "(" + GetCreateScript() + ")");
     }
 
+    //returns true if there is an error
     public boolean Insert(SQLiteDatabase db, T toInsert)
     {
         ContentValues values = GetContentValues(toInsert, false);

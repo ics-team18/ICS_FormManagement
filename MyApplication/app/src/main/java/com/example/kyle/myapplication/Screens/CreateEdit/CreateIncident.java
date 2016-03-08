@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.example.kyle.myapplication.Database.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Database.Database_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Incident;
+import com.example.kyle.myapplication.Database.Tbl_IncidentLink;
+import com.example.kyle.myapplication.Database.Tbl_IncidentLink_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Incident_Manager;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
@@ -30,6 +32,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -39,6 +42,7 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
     private Database_Manager db;
     private TextView lblIncidentID, lblDate;
     private EditText txtDescription, txtAddress, txtCitySTZip, txtLatitude, txtLongitude;
+    private List<Tbl_IncidentLink> incidentLinks = new ArrayList<>();
     public static Tbl_Incident toUpdate = null;
     private static final int PERMISSION_REQUEST_CODE = 1;
     private GoogleApiClient googleApiClient;
@@ -124,6 +128,16 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
             }
         });
 
+        Button btnPersonnel = (Button) findViewById(R.id.btnPersonnel);
+        btnPersonnel.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                setupPersonnel();
+            }
+        });
+
         clear();
     }
 
@@ -182,6 +196,7 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
             txtCitySTZip.setText(toUpdate.citySTZip);
             txtLatitude.setText(Double.toString(toUpdate.latitude));
             txtLongitude.setText(Double.toString(toUpdate.longitude));
+            incidentLinks = toUpdate.incidentLinks;
         }
         else
         {
@@ -190,6 +205,7 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
             txtCitySTZip.setText("");
             txtLatitude.setText("");
             txtLongitude.setText("");
+            incidentLinks.clear();
         }
     }
 
@@ -212,7 +228,7 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
         {
             longitude = Double.parseDouble(longitudeStr);
         }
-        Tbl_Incident record = new Tbl_Incident(startDate, endDate, description, address, citySTZip, latitude, longitude);
+        Tbl_Incident record = new Tbl_Incident(startDate, endDate, description, address, citySTZip, latitude, longitude, incidentLinks);
         String anyErrors = record.isValidRecord();
         if (anyErrors.isEmpty())
         {
@@ -289,6 +305,11 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
                 txtLongitude.setText(Double.toString(longitude));
             }
         }
+    }
+
+    private void setupPersonnel()
+    {
+
     }
 
     @Override
