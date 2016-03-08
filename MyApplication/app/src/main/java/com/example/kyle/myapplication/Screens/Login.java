@@ -82,28 +82,28 @@ public class Login extends AppCompatActivity
         dummyLinks1.add(new Tbl_IncidentLink(1, 2, 2, 2));
         dummyLinks1.add(new Tbl_IncidentLink(1, 3, 3, 3));
         dummyLinks1.add(new Tbl_IncidentLink(1, 4, 4, 4));
-        Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), new Tbl_Incident("09/11/2001 08:46:00", "", "Attack on the first tower", "180 Greenwich St", "New York NY 10007", 40.711667, -74.0125, dummyLinks1));
+        Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), new Tbl_Incident("09-11-2001 08:46:00", "", "Attack on the first tower", "180 Greenwich St", "New York NY 10007", 40.711667, -74.0125, dummyLinks1));
 
         List<Tbl_IncidentLink> dummyLinks2 = new ArrayList<Tbl_IncidentLink>();
         dummyLinks2.add(new Tbl_IncidentLink(2, 2, 3, 1));
         dummyLinks2.add(new Tbl_IncidentLink(2, 1, 4, 2));
         dummyLinks2.add(new Tbl_IncidentLink(2, 3, 2, 3));
         dummyLinks2.add(new Tbl_IncidentLink(2, 4, 1, 4));
-        Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), new Tbl_Incident("09/11/2001 09:03:00", "", "Attack on the second tower", "180 Greenwich St", "New York NY 10007", 40.711667, -74.0125, dummyLinks2));
+        Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), new Tbl_Incident("09-11-2001 09:03:00", "", "Attack on the second tower", "180 Greenwich St", "New York NY 10007", 40.711667, -74.0125, dummyLinks2));
 
         List<Tbl_IncidentLink> dummyLinks3 = new ArrayList<Tbl_IncidentLink>();
         dummyLinks3.add(new Tbl_IncidentLink(3, 4, 1, 1));
         dummyLinks3.add(new Tbl_IncidentLink(3, 2, 4, 2));
         dummyLinks3.add(new Tbl_IncidentLink(3, 3, 3, 3));
         dummyLinks3.add(new Tbl_IncidentLink(3, 1, 2, 4));
-        Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), new Tbl_Incident("02/23/2016 14:25:01", "", "Fire at Wright State", "3640 Colonel Glenn Hwy", "Fairborn, OH 45342", 39.7815, -84.0635983, dummyLinks3));
+        Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), new Tbl_Incident("02-23-2016 14:25:01", "", "Fire at Wright State", "3640 Colonel Glenn Hwy", "Fairborn, OH 45342", 39.7815, -84.0635983, dummyLinks3));
 
         List<Tbl_IncidentLink> dummyLinks4 = new ArrayList<Tbl_IncidentLink>();
         dummyLinks4.add(new Tbl_IncidentLink(4, 3, 4, 1));
         dummyLinks4.add(new Tbl_IncidentLink(4, 4, 1, 2));
         dummyLinks4.add(new Tbl_IncidentLink(4, 2, 2, 3));
         dummyLinks4.add(new Tbl_IncidentLink(4, 1, 3, 4));
-        Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), new Tbl_Incident("02/25/2016 19:05:45", "", "Burglary at Wright State", "3640 Colonel Glenn Hwy", "Fairborn, OH 45342", 39.7815, -84.0635983, dummyLinks4));
+        Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), new Tbl_Incident("02-25-2016 19:05:45", "", "Burglary at Wright State", "3640 Colonel Glenn Hwy", "Fairborn, OH 45342", 39.7815, -84.0635983, dummyLinks4));
 
         //submitted forms
     }

@@ -8,6 +8,14 @@
     tools:context=".Screens.CreateEdit.CreateIncident"
     android:weightSum="1">
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Close Incident"
+        android:id="@+id/btnCloseIncident"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -115,8 +123,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Personnel"
-        android:id="@+id/btnPersonnel"
+        android:text="Setup Personnel"
+        android:id="@+id/btnSetupPersonnel"
         android:layout_gravity="center_horizontal"/>
 
     <Button

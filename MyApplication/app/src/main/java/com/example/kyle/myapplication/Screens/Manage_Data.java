@@ -72,6 +72,11 @@ public class Manage_Data extends AppCompatActivity
         Button btnEdit = (Button) selectionDialog.findViewById(R.id.btnEdit);
         Button btnDelete = (Button) selectionDialog.findViewById(R.id.btnDelete);
 
+        if (table == Abstract_Table_Manager.Table.INCIDENT)
+        {
+            btnCreate.setVisibility(View.GONE);
+            btnEdit.setVisibility(View.GONE);
+        }
         btnCreate.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -84,9 +89,6 @@ public class Manage_Data extends AppCompatActivity
                         break;
                     case ROLE:
                         OpenScreens.OpenCreateRoleScreen(null);
-                        break;
-                    case INCIDENT:
-                        OpenScreens.OpenCreateIncidentScreen(null);
                         break;
                     case SUBMITTEDFORMS:
                         break;

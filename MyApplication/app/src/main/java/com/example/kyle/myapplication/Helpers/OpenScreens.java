@@ -52,11 +52,6 @@ public class OpenScreens extends Activity
         context.startActivity(new Intent(context, Manage_Data.class));
     }
 
-    public static void OpenSelectIncidentScreen()
-    {
-        //context.startActivity(new Intent(context, SelectIncident.class));
-    }
-
     public static void OpenDataListScreen(boolean forEditing, Abstract_Table_Manager.Table table)
     {
         DataList.forEditing = forEditing;

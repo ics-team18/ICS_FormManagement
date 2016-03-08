@@ -42,11 +42,11 @@ public abstract class Abstract_Table_Manager<T>
         return true;
     }
 
-    public Integer Delete(SQLiteDatabase db, T toDelete)
+    public void Delete(SQLiteDatabase db, T toDelete)
     {
         String whereClause = GetWhereClause();
         String[] whereArgs = GetWhereArgs(toDelete);
-        return db.delete(GetTableName(), whereClause, whereArgs);
+        int rowsDeleted = db.delete(GetTableName(), whereClause, whereArgs);
     }
 
     public List<T> Select(SQLiteDatabase db)
@@ -62,6 +62,10 @@ public abstract class Abstract_Table_Manager<T>
             whereClause = GetSelectScript(searchCriteria);
             if (!whereClause.isEmpty())
             {
+                whereClause = whereClause.replace("= NOT NULL","IS NOT NULL");
+                whereClause = whereClause.replace("= NULL","IS NULL");
+                whereClause = whereClause.replace("= !=","!=");
+                whereClause = whereClause.replace("= =", "=");
                 whereClause = "WHERE " + whereClause;
                 whereClause = whereClause.replace("WHERE  AND ", "WHERE ");
             }

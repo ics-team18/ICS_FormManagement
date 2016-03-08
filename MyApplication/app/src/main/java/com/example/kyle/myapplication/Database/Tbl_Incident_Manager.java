@@ -61,7 +61,7 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
     @Override
     public boolean Update(SQLiteDatabase db, Tbl_Incident toUpdate)
     {
-        boolean error = super.Insert(db, toUpdate);
+        boolean error = super.Update(db, toUpdate);
         if (!error)
         {
             for (int i = 0; i < toUpdate.incidentLinks.size(); i++)
@@ -74,6 +74,16 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
             }
         }
         return error;
+    }
+
+    @Override
+    public void Delete(SQLiteDatabase db, Tbl_Incident toDelete)
+    {
+        super.Delete(db, toDelete);
+        for (int i = 0; i < toDelete.incidentLinks.size(); i++)
+        {
+            Tbl_IncidentLink_Manager.current.Delete(db, toDelete.incidentLinks.get(i));
+        }
     }
 
     @Override

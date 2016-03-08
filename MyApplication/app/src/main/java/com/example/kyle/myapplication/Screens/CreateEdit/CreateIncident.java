@@ -1,6 +1,8 @@
 package com.example.kyle.myapplication.Screens.CreateEdit;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -21,10 +23,12 @@ import com.example.kyle.myapplication.Database.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Database.Database_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Incident;
 import com.example.kyle.myapplication.Database.Tbl_IncidentLink;
-import com.example.kyle.myapplication.Database.Tbl_IncidentLink_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Incident_Manager;
+import com.example.kyle.myapplication.Database.Tbl_Personnel;
+import com.example.kyle.myapplication.Database.Tbl_Personnel_Manager;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
+import com.example.kyle.myapplication.Screens.DataList;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
@@ -95,18 +99,9 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
             @Override
             public void onClick(View view)
             {
-                create();
+                create(false);
             }
         });
-
-        if (toUpdate == null)
-        {
-            t.start();
-        }
-        else
-        {
-            btnCreate.setText("Update");
-        }
 
         Button btnClear = (Button) findViewById(R.id.btnClear);
         btnClear.setOnClickListener(new View.OnClickListener()
@@ -118,6 +113,28 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
             }
         });
 
+        Button btnCloseIncident = (Button) findViewById(R.id.btnCloseIncident);
+        btnCloseIncident.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                closeIncident();
+            }
+        });
+
+        if (toUpdate == null)
+        {
+            t.start();
+            btnCloseIncident.setVisibility(View.GONE);
+        }
+        else
+        {
+            btnCreate.setText("Update");
+            btnClear.setText("Revert Changes");
+            btnCloseIncident.setVisibility(View.VISIBLE);
+        }
+
         Button btnFetchLocation = (Button) findViewById(R.id.btnFetchLocation);
         btnFetchLocation.setOnClickListener(new View.OnClickListener()
         {
@@ -128,8 +145,8 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        Button btnPersonnel = (Button) findViewById(R.id.btnPersonnel);
-        btnPersonnel.setOnClickListener(new View.OnClickListener()
+        Button btnSetupPersonnel = (Button) findViewById(R.id.btnSetupPersonnel);
+        btnSetupPersonnel.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -141,11 +158,16 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
         clear();
     }
 
-    private void setIDAndDate()
+    private String getCurrentDateTime()
     {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
-        String formattedDate = sdf.format(calendar.getTime());
+        return sdf.format(calendar.getTime());
+    }
+
+    private void setIDAndDate()
+    {
+        String formattedDate = getCurrentDateTime();
         lblDate.setText(formattedDate);
         int nextIncidentID = Tbl_Incident_Manager.current.GetNextID(db.getReadableDatabase());
         lblIncidentID.setText(Integer.toString(nextIncidentID));
@@ -185,6 +207,25 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
         AppIndex.AppIndexApi.end(googleApiClient, viewAction);
     }
 
+    private void closeIncident()
+    {
+        //if we are in here then that means the user is in edit mode
+        //are you sure you want to close the incident?
+        //if yes then update the record
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateIncident.this);
+        builder.setMessage("Are you sure you want to close this incident? (Once you have closed an incident it cannot be reopened for editing)");
+        builder.setNegativeButton("No", null);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                create(true);
+            }
+        });
+        builder.show();
+    }
+
     private void clear()
     {
         if (toUpdate != null)
@@ -209,10 +250,10 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
         }
     }
 
-    private void create()
+    private void create(boolean closeIncident)
     {
         String startDate = lblDate.getText().toString();
-        String endDate = "";
+        String endDate = closeIncident ? getCurrentDateTime() : "";
         String description = txtDescription.getText().toString();
         String address = txtAddress.getText().toString();
         String citySTZip = txtCitySTZip.getText().toString();
@@ -237,7 +278,8 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
                 record.incidentID = toUpdate.incidentID;
                 toUpdate = record;
                 Tbl_Incident_Manager.current.Update(db.getWritableDatabase(), toUpdate);
-                Toast.makeText(this, "Incident Updated", Toast.LENGTH_LONG).show();
+                String message = closeIncident ? "Incident Closed" : "Incident Updated";
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
                 OpenScreens.OpenDataListScreen(true, Abstract_Table_Manager.Table.INCIDENT);
             }
             else

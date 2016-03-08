@@ -53,11 +53,6 @@ public class CreatePersonnel extends AppCompatActivity
             }
         });
 
-        if (toUpdate != null)
-        {
-            btnRegister.setText("Update");
-        }
-
         Button btnClear = (Button) findViewById(R.id.btnClear);
         btnClear.setOnClickListener(new View.OnClickListener()
         {
@@ -67,6 +62,12 @@ public class CreatePersonnel extends AppCompatActivity
                 clear();
             }
         });
+
+        if (toUpdate != null)
+        {
+            btnRegister.setText("Update");
+            btnClear.setText("Revert Changes");
+        }
 
         Button btnPhoneNumber = (Button) findViewById(R.id.btnPhoneNumber);
         btnPhoneNumber.setOnClickListener(new View.OnClickListener()

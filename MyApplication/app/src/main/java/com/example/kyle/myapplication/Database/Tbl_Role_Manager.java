@@ -16,7 +16,6 @@ public class Tbl_Role_Manager extends Abstract_Table_Manager<Tbl_Role>
     public enum Attributes
     {
         ROLEID,
-        RANKING,
         TITLE,
     }
 
@@ -36,7 +35,6 @@ public class Tbl_Role_Manager extends Abstract_Table_Manager<Tbl_Role>
     public String GetCreateScript()
     {
         return Attributes.ROLEID.name() + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                Attributes.RANKING.name() + " INTEGER, " +
                 Attributes.TITLE.name() + " TEXT";
     }
 

@@ -19,6 +19,8 @@ import com.example.kyle.myapplication.Database.Tbl_Incident;
 import com.example.kyle.myapplication.Database.Tbl_Incident_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Tbl_Personnel_Manager;
+import com.example.kyle.myapplication.Database.Tbl_Role;
+import com.example.kyle.myapplication.Database.Tbl_Role_Manager;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
 
@@ -58,10 +60,15 @@ public class DataList extends AppCompatActivity
                 valueList = new ArrayList<Abstract_Table>(Tbl_Personnel_Manager.current.Select(db.getReadableDatabase()));
                 break;
             case ROLE:
-                //valueList = new ArrayList<Abstract_Table>(Tbl_Role_Manager.current.Select(db.getReadableDatabase()));
+                valueList = new ArrayList<Abstract_Table>(Tbl_Role_Manager.current.Select(db.getReadableDatabase()));
                 break;
             case INCIDENT:
-                valueList = new ArrayList<Abstract_Table>(Tbl_Incident_Manager.current.Select(db.getReadableDatabase()));
+                Tbl_Incident searchCriteria = new Tbl_Incident();
+                if (forEditing)
+                {
+                    searchCriteria.endTime = "= ''";
+                }
+                valueList = new ArrayList<Abstract_Table>(Tbl_Incident_Manager.current.Select(db.getReadableDatabase(), searchCriteria));
                 break;
             case SUBMITTEDFORMS:
                 //valueList = new ArrayList<Abstract_Table>(Tbl_SubmittedForms_Manager.current.Select(db.getReadableDatabase()));
@@ -75,23 +82,14 @@ public class DataList extends AppCompatActivity
                 public void onItemClick(AdapterView parent, View v, int position, long id)
                 {
                     selectedRecord = valueList.get(position);
-                    switch (SpecificTable)
-                    {
-                        case PERSONNEL:
-                            OpenScreens.OpenCreatePersonnelScreen((Tbl_Personnel) DataList.selectedRecord, false);
-                            break;
-                        case ROLE:
-                            //OpenScreens.OpenCreateRoleScreen((Tbl_Role) DataList.selectedRecord);
-                            break;
-                        case INCIDENT:
-                            OpenScreens.OpenCreateIncidentScreen((Tbl_Incident) DataList.selectedRecord);
-                            break;
-                        case SUBMITTEDFORMS:
-                            break;
-                    }
-                    finish();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(DataList.this);
+                    builder.setMessage(selectedRecord.getDataGridPopupMessageValue());
+                    builder.setPositiveButton("Edit", dialogClickListener);
+                    builder.setNegativeButton("Cancel", null);
+                    builder.show();
                 }
             });
+
         }
         else
         {
@@ -104,7 +102,7 @@ public class DataList extends AppCompatActivity
                     AlertDialog.Builder builder = new AlertDialog.Builder(DataList.this);
                     builder.setMessage(selectedRecord.getDataGridPopupMessageValue());
                     builder.setPositiveButton("Delete", dialogClickListener);
-                    builder.setNegativeButton("Cancel", dialogClickListener);
+                    builder.setNegativeButton("Cancel", null);
                     builder.show();
                 }
             });
@@ -122,39 +120,57 @@ public class DataList extends AppCompatActivity
             switch (which)
             {
                 case DialogInterface.BUTTON_POSITIVE:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(DataList.this);
-                    builder.setMessage("Are you sure you want to delete this record? (This cannot be undone)");
-                    builder.setNegativeButton("Cancel", null);
-                    builder.setPositiveButton("Delete", new DialogInterface.OnClickListener()
+                    if (forEditing)
                     {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
+                        switch (SpecificTable)
                         {
-                            switch (SpecificTable)
-                            {
-                                case PERSONNEL:
-                                    Tbl_Personnel_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Personnel) selectedRecord);
-                                    break;
-                                case ROLE:
-                                    //Tbl_Role_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Role) selectedRecord);
-                                    break;
-                                case INCIDENT:
-                                    Tbl_Incident_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Incident) selectedRecord);
-                                    break;
-                                case SUBMITTEDFORMS:
-                                    //Tbl_SubmittedForms_Manager.current.Delete(db.getWritableDatabase(), (Tbl_SubmittedForms) selectedRecord);
-                                    break;
-                            }
-                            valueList.remove(selectedRecord);
-                            gridView.invalidateViews();
-                            Toast.makeText(DataList.this, "Record successfully deleted", Toast.LENGTH_LONG).show();
-                            showHideNoDataLabel();
+                            case PERSONNEL:
+                                OpenScreens.OpenCreatePersonnelScreen((Tbl_Personnel) DataList.selectedRecord, false);
+                                break;
+                            case ROLE:
+                                OpenScreens.OpenCreateRoleScreen((Tbl_Role) DataList.selectedRecord);
+                                break;
+                            case INCIDENT:
+                                OpenScreens.OpenCreateIncidentScreen((Tbl_Incident) DataList.selectedRecord);
+                                break;
+                            case SUBMITTEDFORMS:
+                                break;
                         }
-                    });
-                    builder.show();
-                case DialogInterface.BUTTON_NEGATIVE:
-                    //Do nothing
-                    break;
+                        finish();
+                    }
+                    else
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(DataList.this);
+                        builder.setMessage("Are you sure you want to delete this record? (This cannot be undone)");
+                        builder.setNegativeButton("Cancel", null);
+                        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                switch (SpecificTable)
+                                {
+                                    case PERSONNEL:
+                                        Tbl_Personnel_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Personnel) selectedRecord);
+                                        break;
+                                    case ROLE:
+                                        Tbl_Role_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Role) selectedRecord);
+                                        break;
+                                    case INCIDENT:
+                                        Tbl_Incident_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Incident) selectedRecord);
+                                        break;
+                                    case SUBMITTEDFORMS:
+                                        //Tbl_SubmittedForms_Manager.current.Delete(db.getWritableDatabase(), (Tbl_SubmittedForms) selectedRecord);
+                                        break;
+                                }
+                                valueList.remove(selectedRecord);
+                                gridView.invalidateViews();
+                                Toast.makeText(DataList.this, "Record successfully deleted", Toast.LENGTH_LONG).show();
+                                showHideNoDataLabel();
+                            }
+                        });
+                        builder.show();
+                    }
             }
         }
     };

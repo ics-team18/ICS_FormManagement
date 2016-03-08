@@ -5,29 +5,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.kyle.myapplication.Database.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Helpers.LoggedInUser;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
 
-public class MainScreen extends AppCompatActivity {
+public class MainScreen extends AppCompatActivity
+{
 
-         Button btnSelectIncident, btnCreateIncident, btnManageData;
+    Button btnEditIncident, btnCreateIncident, btnManageData;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
-        btnSelectIncident = (Button) findViewById(R.id.btnSelectIncident);
+        btnEditIncident = (Button) findViewById(R.id.btnEditIncident);
         btnCreateIncident = (Button) findViewById(R.id.btnCreateIncident);
         btnManageData = (Button) findViewById(R.id.btnManageData);
-        btnManageData.setVisibility(LoggedInUser.User.isSupervisor? View.VISIBLE : View.GONE);
-        btnSelectIncident.setOnClickListener(new View.OnClickListener()
+        btnManageData.setVisibility(LoggedInUser.User.isSupervisor ? View.VISIBLE : View.GONE);
+        btnEditIncident.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                OpenScreens.OpenSelectIncidentScreen();
+                OpenScreens.OpenDataListScreen(true, Abstract_Table_Manager.Table.INCIDENT);
             }
         });
 
