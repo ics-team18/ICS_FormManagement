@@ -1,9 +1,9 @@
 package com.example.kyle.myapplication.Screens;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,6 +14,7 @@ import com.example.kyle.myapplication.Database.Tbl_Incident_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Tbl_Personnel_Manager;
 import com.example.kyle.myapplication.Helpers.LoggedInUser;
+import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
 
 import java.util.ArrayList;
@@ -30,11 +31,12 @@ public class Login extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnRegister = (Button) findViewById(R.id.btnRegister);
         txtEmail = (EditText) findViewById(R.id.txtEmail);
         txtPassword = (EditText) findViewById(R.id.txtPassword);
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         db = new Database_Manager(this);
         db.onUpgrade(db.getWritableDatabase(), 0, 0);
         insertDummyRecords();
@@ -51,7 +53,7 @@ public class Login extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                register();
+                OpenScreens.OpenCreatePersonnelScreen(null, true);
             }
         });
     }
@@ -98,18 +100,12 @@ public class Login extends AppCompatActivity
             if (isValid)
             {
                 LoggedInUser.User = resultList.get(0);
-                startActivity(new Intent(this, MainScreen.class));
+                OpenScreens.OpenMainScreen();
             }
             else
             {
                 Toast.makeText(this, "Invalid E-mail address or password.", Toast.LENGTH_LONG).show();
             }
         }
-    }
-
-    private void register()
-    {
-        Register.fromHomeScreen(true);
-        startActivity(new Intent(this, Register.class));
     }
 }

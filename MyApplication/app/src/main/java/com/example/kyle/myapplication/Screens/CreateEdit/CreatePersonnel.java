@@ -1,35 +1,38 @@
-package com.example.kyle.myapplication.Screens;
+package com.example.kyle.myapplication.Screens.CreateEdit;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.kyle.myapplication.Database.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Database.Database_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Tbl_Personnel_Manager;
 import com.example.kyle.myapplication.Helpers.LoggedInUser;
+import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
 
-public class Register extends AppCompatActivity
+public class CreatePersonnel extends AppCompatActivity
 {
     private Database_Manager db;
     private EditText txtFirstName, txtLastName, txtPositionTitle, txtPhoneNumber, txtEmail, txtPassword, txtConfirmPassword;
     private CheckBox chkIsSupervisor;
-    private static int btnDeleteVisibility = View.GONE;
-    private static boolean fromLoginScreen = false;
+    public static boolean fromLoginScreen = true;
+    public static Tbl_Personnel toUpdate = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         db = new Database_Manager(this);
         txtFirstName = (EditText) findViewById(R.id.txtFirstName);
         txtLastName = (EditText) findViewById(R.id.txtLastName);
@@ -50,6 +53,11 @@ public class Register extends AppCompatActivity
             }
         });
 
+        if (toUpdate != null)
+        {
+            btnRegister.setText("Update");
+        }
+
         Button btnClear = (Button) findViewById(R.id.btnClear);
         btnClear.setOnClickListener(new View.OnClickListener()
         {
@@ -57,32 +65,6 @@ public class Register extends AppCompatActivity
             public void onClick(View view)
             {
                 clear();
-            }
-        });
-
-        Button btnDelete = (Button) findViewById(R.id.btnDelete);
-
-        if (fromLoginScreen)
-        {
-            //if we are coming from the login screen then the button will always be invisible
-            btnDeleteVisibility = View.GONE;
-            //if we are coming from the login screen then it is likely the user is setting up their own account
-            //so use the user's phone number
-            setUsersPhoneNumber();
-        }
-        else
-        {
-            //otherwise we will check to see if the user has access to delete
-            btnDeleteVisibility = LoggedInUser.User.isSupervisor ? View.VISIBLE : View.GONE;
-        }
-
-        btnDelete.setVisibility(btnDeleteVisibility);
-        btnDelete.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                delete();
             }
         });
 
@@ -96,6 +78,24 @@ public class Register extends AppCompatActivity
             }
         });
 
+        clear();
+
+        int isSupervisorVisible;
+        if (fromLoginScreen)
+        {
+            //if we are coming from the login screen then the button will always be invisible
+            isSupervisorVisible = View.GONE;
+            //if we are coming from the login screen then it is likely the user is setting up their own account
+            //so use the user's phone number
+            setUsersPhoneNumber();
+        }
+        else
+        {
+            //otherwise we will check to see if the user has access to delete
+            isSupervisorVisible = LoggedInUser.User.isSupervisor ? View.VISIBLE : View.GONE;
+        }
+
+        chkIsSupervisor.setVisibility(isSupervisorVisible);
     }
 
     private void register()
@@ -118,9 +118,20 @@ public class Register extends AppCompatActivity
             String anyErrors = record.isValidRecord();
             if (anyErrors.isEmpty())
             {
-                Tbl_Personnel_Manager.current.Insert(db.getWritableDatabase(), record);
-                Toast.makeText(this, "Personnel Added", Toast.LENGTH_LONG).show();
-                clear();
+                if (toUpdate != null)
+                {
+                    record.personnelID = toUpdate.personnelID;
+                    toUpdate = record;
+                    Tbl_Personnel_Manager.current.Update(db.getWritableDatabase(), toUpdate);
+                    Toast.makeText(this, "Personnel Updated", Toast.LENGTH_LONG).show();
+                    OpenScreens.OpenDataListScreen(true, Abstract_Table_Manager.Table.PERSONNEL);
+                }
+                else
+                {
+                    Tbl_Personnel_Manager.current.Insert(db.getWritableDatabase(), record);
+                    Toast.makeText(this, "Personnel Added", Toast.LENGTH_LONG).show();
+                }
+                finish();
             }
             else
             {
@@ -131,20 +142,28 @@ public class Register extends AppCompatActivity
 
     private void clear()
     {
-        txtFirstName.setText("");
-        txtLastName.setText("");
-        txtEmail.setText("");
-        txtPositionTitle.setText("");
-        txtPassword.setText("");
-        txtConfirmPassword.setText("");
-        chkIsSupervisor.setChecked(false);
-        txtPhoneNumber.setText("");
-    }
-
-    private void delete()
-    {
-        DeleteData.SetSpecificTable(DeleteData.Table.PERSONNEL);
-        startActivity(new Intent(getApplicationContext(), DeleteData.class));
+        if (toUpdate != null)
+        {
+            txtFirstName.setText(toUpdate.firstName);
+            txtLastName.setText(toUpdate.lastName);
+            txtPositionTitle.setText(toUpdate.title);
+            txtPhoneNumber.setText(toUpdate.mobilePhone);
+            txtEmail.setText(toUpdate.email);
+            txtPassword.setText(toUpdate.password);
+            txtConfirmPassword.setText(toUpdate.password);
+            chkIsSupervisor.setChecked(toUpdate.isSupervisor);
+        }
+        else
+        {
+            txtFirstName.setText("");
+            txtLastName.setText("");
+            txtEmail.setText("");
+            txtPositionTitle.setText("");
+            txtPassword.setText("");
+            txtConfirmPassword.setText("");
+            chkIsSupervisor.setChecked(false);
+            txtPhoneNumber.setText("");
+        }
     }
 
     private void setUsersPhoneNumber()
@@ -163,10 +182,5 @@ public class Register extends AppCompatActivity
         }
 
         txtPhoneNumber.setText(mobilePhone);
-    }
-
-    public static void fromHomeScreen(boolean fromLogin)
-    {
-        fromLoginScreen = fromLogin;
     }
 }

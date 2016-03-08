@@ -11,17 +11,30 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".Screens.Manage_Data"
-    tools:showIn="@layout/activity_manage_data">
+    tools:showIn="@layout/activity_manage_data_selection_menu">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Table"
+            android:id="@+id/txtTable"
+            android:textStyle="bold"
+            android:layout_weight="0.23"
+            android:textSize="40dp"
+            android:textAlignment="center"
+            android:layout_marginBottom="10dp"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Personnel"
+            android:text="Create"
             android:id="@+id/btnCreate"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
@@ -33,8 +46,8 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Roles"
-            android:id="@+id/btnRoles"
+            android:text="Edit"
+            android:id="@+id/btnEdit"
             android:textSize="16sp"
             android:layout_below="@+id/btnCreate"
             android:layout_alignParentLeft="true"
@@ -48,24 +61,8 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Incidents"
-            android:id="@+id/btnIncidents"
-            android:textSize="16sp"
-            android:layout_below="@+id/btnCreate"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="37dp"
-            android:layout_alignRight="@+id/btnCreate"
-            android:layout_alignEnd="@+id/btnCreate"
-            android:layout_row="1"
-            android:layout_column="0"
-            android:layout_gravity="center_horizontal"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Submitted Forms"
-            android:id="@+id/btnSubmittedForms"
+            android:text="Delete"
+            android:id="@+id/btnDelete"
             android:textSize="16sp"
             android:layout_below="@+id/btnCreate"
             android:layout_alignParentLeft="true"

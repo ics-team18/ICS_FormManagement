@@ -1,4 +1,4 @@
-package com.example.kyle.myapplication.Screens;
+package com.example.kyle.myapplication.Screens.CreateEdit;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -11,14 +11,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kyle.myapplication.Database.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Database.Database_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Incident;
 import com.example.kyle.myapplication.Database.Tbl_Incident_Manager;
+import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -36,6 +39,7 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
     private Database_Manager db;
     private TextView lblIncidentID, lblDate;
     private EditText txtDescription, txtAddress, txtCitySTZip, txtLatitude, txtLongitude;
+    public static Tbl_Incident toUpdate = null;
     private static final int PERMISSION_REQUEST_CODE = 1;
     private GoogleApiClient googleApiClient;
 
@@ -44,7 +48,7 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_incident);
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         db = new Database_Manager(this);
         lblIncidentID = (TextView) findViewById(R.id.lblIncidentID);
         lblDate = (TextView) findViewById(R.id.lblDate);
@@ -81,8 +85,6 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
             }
         };
 
-        t.start();
-
         Button btnCreate = (Button) findViewById(R.id.btnCreate);
         btnCreate.setOnClickListener(new View.OnClickListener()
         {
@@ -92,6 +94,15 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
                 create();
             }
         });
+
+        if (toUpdate == null)
+        {
+            t.start();
+        }
+        else
+        {
+            btnCreate.setText("Update");
+        }
 
         Button btnClear = (Button) findViewById(R.id.btnClear);
         btnClear.setOnClickListener(new View.OnClickListener()
@@ -112,6 +123,8 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
                 setLocation();
             }
         });
+
+        clear();
     }
 
     private void setIDAndDate()
@@ -160,16 +173,28 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
 
     private void clear()
     {
-        txtDescription.setText("");
-        txtAddress.setText("");
-        txtCitySTZip.setText("");
-        txtLatitude.setText("");
-        txtLongitude.setText("");
+        if (toUpdate != null)
+        {
+            lblIncidentID.setText(Integer.toString(toUpdate.incidentID));
+            lblDate.setText(toUpdate.startTime);
+            txtDescription.setText(toUpdate.description);
+            txtAddress.setText(toUpdate.address);
+            txtCitySTZip.setText(toUpdate.citySTZip);
+            txtLatitude.setText(Double.toString(toUpdate.latitude));
+            txtLongitude.setText(Double.toString(toUpdate.longitude));
+        }
+        else
+        {
+            txtDescription.setText("");
+            txtAddress.setText("");
+            txtCitySTZip.setText("");
+            txtLatitude.setText("");
+            txtLongitude.setText("");
+        }
     }
 
     private void create()
     {
-        int incidentID = Integer.parseInt(lblIncidentID.getText().toString());
         String startDate = lblDate.getText().toString();
         String endDate = "";
         String description = txtDescription.getText().toString();
@@ -191,10 +216,20 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
         String anyErrors = record.isValidRecord();
         if (anyErrors.isEmpty())
         {
-            clear();
-            Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), record);
-            Toast.makeText(this, "Incident Created", Toast.LENGTH_LONG).show();
-            //instead of showing a message go to the manage incident screen
+            if (toUpdate != null)
+            {
+                record.incidentID = toUpdate.incidentID;
+                toUpdate = record;
+                Tbl_Incident_Manager.current.Update(db.getWritableDatabase(), toUpdate);
+                Toast.makeText(this, "Incident Updated", Toast.LENGTH_LONG).show();
+                OpenScreens.OpenDataListScreen(true, Abstract_Table_Manager.Table.INCIDENT);
+            }
+            else
+            {
+                Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), record);
+                Toast.makeText(this, "Incident Created", Toast.LENGTH_LONG).show();
+            }
+            finish();
         }
         else
         {
@@ -259,7 +294,10 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
     @Override
     public void onConnected(Bundle connectionHint)
     {
-        setLocation();
+        if (toUpdate != null)
+        {
+            setLocation();
+        }
     }
 
     @Override

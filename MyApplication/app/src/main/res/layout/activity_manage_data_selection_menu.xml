@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".Screens.Manage_Data">
+    android:fitsSystemWindows="true">
 
-    <include layout="@layout/content_manage_data"/>
+    <include layout="@layout/content_manage_data_selection_menu"/>
 
 </android.support.design.widget.CoordinatorLayout>

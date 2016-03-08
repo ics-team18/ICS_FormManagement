@@ -1,18 +1,15 @@
 package com.example.kyle.myapplication.CustomControls;
 
 import android.content.Context;
-import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.kyle.myapplication.Database.Abstract_Table;
-import com.example.kyle.myapplication.Database.Tbl_Personnel;
 
 import java.lang.Object;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;

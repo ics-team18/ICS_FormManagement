@@ -9,7 +9,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.kyle.myapplication.R;
-import com.example.kyle.myapplication.Screens.DownloadTemplateSpinnerListener;
 
 public class DownloadTemplate extends Activity {
 

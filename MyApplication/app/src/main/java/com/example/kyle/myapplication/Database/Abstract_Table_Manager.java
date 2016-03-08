@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,6 +11,15 @@ import java.util.List;
  */
 public abstract class Abstract_Table_Manager<T>
 {
+    public enum Table
+    {
+        NONE,
+        PERSONNEL,
+        ROLE,
+        INCIDENT,
+        SUBMITTEDFORMS,
+    }
+
     public void Create(SQLiteDatabase db)
     {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + GetTableName() + "(" + GetCreateScript() + ")");
