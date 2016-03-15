@@ -19,11 +19,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.kyle.myapplication.Database.Abstract_Table_Manager;
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Database.Database_Manager;
-import com.example.kyle.myapplication.Database.Tbl_Incident;
-import com.example.kyle.myapplication.Database.Tbl_IncidentLink;
-import com.example.kyle.myapplication.Database.Tbl_Incident_Manager;
+import com.example.kyle.myapplication.Database.Incident.Tbl_Incident;
+import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink;
+import com.example.kyle.myapplication.Database.Incident.Tbl_Incident_Manager;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
 import com.example.kyle.myapplication.Screens.DataList;
@@ -36,11 +36,10 @@ import com.google.android.gms.location.LocationServices;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class CreateIncident extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+public class CreateEditIncident extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
     private Database_Manager db;
     private TextView lblIncidentID, lblDate;
@@ -54,7 +53,7 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_incident);
+        setContentView(R.layout.activity_createedit_incident);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         db = new Database_Manager(this);
         lblIncidentID = (TextView) findViewById(R.id.lblIncidentID);
@@ -179,7 +178,7 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(Action.TYPE_VIEW, // TODO: choose an action type.
-                "CreateIncident Page", // TODO: Define a title for the content shown.
+                "CreateEditIncident Page", // TODO: Define a title for the content shown.
                 // TODO: If you have web page content that matches this app activity's content,
                 // make sure this auto-generated web page URL is correct.
                 // Otherwise, set the URL to null.
@@ -196,7 +195,7 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(Action.TYPE_VIEW, // TODO: choose an action type.
-                "CreateIncident Page", // TODO: Define a title for the content shown.
+                "CreateEditIncident Page", // TODO: Define a title for the content shown.
                 // TODO: If you have web page content that matches this app activity's content,
                 // make sure this auto-generated web page URL is correct.
                 // Otherwise, set the URL to null.
@@ -211,7 +210,7 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
         //if we are in here then that means the user is in edit mode
         //are you sure you want to close the incident?
         //if yes then update the record
-        AlertDialog.Builder builder = new AlertDialog.Builder(CreateIncident.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateEditIncident.this);
         builder.setMessage("Are you sure you want to close this incident? (Once you have closed an incident it cannot be reopened for editing)");
         builder.setNegativeButton("No", null);
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener()

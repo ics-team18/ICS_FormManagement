@@ -1,4 +1,4 @@
-package com.example.kyle.myapplication.Screens;
+package com.example.kyle.myapplication.Screens.Template.Upload;
 
 import android.app.Activity;
 import android.content.Intent;

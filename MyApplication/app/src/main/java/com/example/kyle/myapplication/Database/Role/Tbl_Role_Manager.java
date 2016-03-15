@@ -1,7 +1,9 @@
-package com.example.kyle.myapplication.Database;
+package com.example.kyle.myapplication.Database.Role;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
 
 import java.util.ArrayList;
 import java.util.List;

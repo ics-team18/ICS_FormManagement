@@ -4,6 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.kyle.myapplication.Database.Incident.Tbl_Incident_Manager;
+import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink_Manager;
+import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
+import com.example.kyle.myapplication.Database.Role.Tbl_Role_Manager;
+import com.example.kyle.myapplication.Database.SubmittedForms.Tbl_SubmittedForms_Manager;
+
 import java.util.ArrayList;
 import java.util.List;
 

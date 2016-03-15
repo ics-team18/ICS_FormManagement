@@ -21,34 +21,34 @@
         </activity>
         <activity android:name=".Screens.Login">
         </activity>
-        <activity android:name=".Screens.CreateEdit.CreatePersonnel">
+        <activity android:name=".Screens.CreateEdit.CreateEditPersonnel">
         </activity>
         <activity
             android:name=".Screens.MainScreen"
             android:label="@string/title_activity_main_screen"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".Screens.CreateEdit.CreateRole">
+        <activity android:name=".Screens.CreateEdit.CreateEditRole">
         </activity>
         <activity
             android:name=".Screens.DataList"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".Screens.SetupPersonnel"
+            android:name=".Screens.CreateEdit.CreateEditIncidentLinks"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".Screens.Manage_Data"
+            android:name=".Screens.CreateEdit.Manage_Data"
             android:label="@string/title_activity_manage_data"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".Screens.DownloadTemplate">
+        <activity android:name=".Screens.Template.Download.DownloadTemplate">
         </activity>
-        <activity android:name=".Screens.UploadTemplate">
+        <activity android:name=".Screens.Template.Upload.UploadTemplate">
         </activity>
         <activity
-            android:name=".Screens.CreateEdit.CreateIncident"
+            android:name=".Screens.CreateEdit.CreateEditIncident"
             android:label="@string/title_activity_main_screen"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>

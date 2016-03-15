@@ -4,25 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.WindowManager;
 
-import com.example.kyle.myapplication.Database.Abstract_Table;
-import com.example.kyle.myapplication.Database.Abstract_Table_Manager;
-import com.example.kyle.myapplication.Database.Tbl_Incident;
-import com.example.kyle.myapplication.Database.Tbl_IncidentLink;
-import com.example.kyle.myapplication.Database.Tbl_Personnel;
-import com.example.kyle.myapplication.Database.Tbl_Role;
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
+import com.example.kyle.myapplication.Database.Incident.Tbl_Incident;
+import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
+import com.example.kyle.myapplication.Database.Role.Tbl_Role;
 import com.example.kyle.myapplication.R;
-import com.example.kyle.myapplication.Screens.CreateEdit.CreateIncident;
-import com.example.kyle.myapplication.Screens.CreateEdit.CreatePersonnel;
-import com.example.kyle.myapplication.Screens.CreateEdit.CreateRole;
+import com.example.kyle.myapplication.Screens.CreateEdit.CreateEditIncident;
+import com.example.kyle.myapplication.Screens.CreateEdit.CreateEditPersonnel;
+import com.example.kyle.myapplication.Screens.CreateEdit.CreateEditRole;
 import com.example.kyle.myapplication.Screens.DataList;
 import com.example.kyle.myapplication.Screens.Login;
 import com.example.kyle.myapplication.Screens.MainScreen;
-import com.example.kyle.myapplication.Screens.Manage_Data;
-import com.example.kyle.myapplication.Screens.SetupPersonnel;
-
-import java.util.List;
+import com.example.kyle.myapplication.Screens.CreateEdit.Manage_Data;
+import com.example.kyle.myapplication.Screens.CreateEdit.CreateEditIncidentLinks;
 
 /**
  * Created by Kyle on 2/27/2016.
@@ -66,25 +61,25 @@ public class OpenScreens extends Activity
 
     public static void OpenCreatePersonnelScreen(Tbl_Personnel toUpdate, boolean fromLoginScreen)
     {
-        CreatePersonnel.toUpdate = toUpdate;
-        CreatePersonnel.fromLoginScreen = fromLoginScreen;
-        context.startActivity(new Intent(context, CreatePersonnel.class));
+        CreateEditPersonnel.toUpdate = toUpdate;
+        CreateEditPersonnel.fromLoginScreen = fromLoginScreen;
+        context.startActivity(new Intent(context, CreateEditPersonnel.class));
     }
 
     public static void OpenCreateIncidentScreen(Tbl_Incident toUpdate)
     {
-        CreateIncident.toUpdate = toUpdate;
-        context.startActivity(new Intent(context, CreateIncident.class));
+        CreateEditIncident.toUpdate = toUpdate;
+        context.startActivity(new Intent(context, CreateEditIncident.class));
     }
 
     public static void OpenCreateRoleScreen(Tbl_Role toUpdate)
     {
-        //CreateRole.toUpdate = toUpdate;
-        context.startActivity(new Intent(context, CreateRole.class));
+        //CreateEditRole.toUpdate = toUpdate;
+        context.startActivity(new Intent(context, CreateEditRole.class));
     }
 
     public static void OpenSetupPersonnelScreen()
     {
-        context.startActivity(new Intent(context, SetupPersonnel.class));
+        context.startActivity(new Intent(context, CreateEditIncidentLinks.class));
     }
 }

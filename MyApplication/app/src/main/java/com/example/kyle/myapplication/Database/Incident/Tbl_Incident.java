@@ -1,4 +1,7 @@
-package com.example.kyle.myapplication.Database;
+package com.example.kyle.myapplication.Database.Incident;
+
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
+import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink;
 
 import java.util.ArrayList;
 import java.util.Collections;

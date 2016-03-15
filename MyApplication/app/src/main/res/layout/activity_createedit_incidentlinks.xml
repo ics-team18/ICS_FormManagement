@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Screens.SetupPersonnel">
+    tools:context=".Screens.CreateEdit.CreateEditIncidentLinks">
 
-    <include layout="@layout/content_setuppersonnel"/>
+    <include layout="@layout/content_createedit_incidentlinks"/>
 
 </android.support.design.widget.CoordinatorLayout>

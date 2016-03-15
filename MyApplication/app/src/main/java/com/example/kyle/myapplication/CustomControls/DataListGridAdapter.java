@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.kyle.myapplication.Database.Abstract_Table;
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
 
 import java.lang.Object;
 import java.util.ArrayList;

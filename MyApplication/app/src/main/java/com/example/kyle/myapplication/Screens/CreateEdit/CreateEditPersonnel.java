@@ -11,16 +11,16 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.kyle.myapplication.Database.Abstract_Table_Manager;
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Database.Database_Manager;
-import com.example.kyle.myapplication.Database.Tbl_Personnel;
-import com.example.kyle.myapplication.Database.Tbl_Personnel_Manager;
+import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
+import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
 import com.example.kyle.myapplication.Helpers.LoggedInUser;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
 import com.example.kyle.myapplication.Screens.DataList;
 
-public class CreatePersonnel extends AppCompatActivity
+public class CreateEditPersonnel extends AppCompatActivity
 {
     private Database_Manager db;
     private EditText txtFirstName, txtLastName, txtPositionTitle, txtPhoneNumber, txtEmail, txtPassword, txtConfirmPassword;
@@ -32,7 +32,7 @@ public class CreatePersonnel extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_createedit_personnel);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         db = new Database_Manager(this);
         txtFirstName = (EditText) findViewById(R.id.txtFirstName);

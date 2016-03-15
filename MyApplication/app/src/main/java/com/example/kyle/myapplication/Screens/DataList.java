@@ -12,15 +12,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kyle.myapplication.CustomControls.DataListGridAdapter;
-import com.example.kyle.myapplication.Database.Abstract_Table;
-import com.example.kyle.myapplication.Database.Abstract_Table_Manager;
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Database.Database_Manager;
-import com.example.kyle.myapplication.Database.Tbl_Incident;
-import com.example.kyle.myapplication.Database.Tbl_Incident_Manager;
-import com.example.kyle.myapplication.Database.Tbl_Personnel;
-import com.example.kyle.myapplication.Database.Tbl_Personnel_Manager;
-import com.example.kyle.myapplication.Database.Tbl_Role;
-import com.example.kyle.myapplication.Database.Tbl_Role_Manager;
+import com.example.kyle.myapplication.Database.Incident.Tbl_Incident;
+import com.example.kyle.myapplication.Database.Incident.Tbl_Incident_Manager;
+import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
+import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
+import com.example.kyle.myapplication.Database.Role.Tbl_Role;
+import com.example.kyle.myapplication.Database.Role.Tbl_Role_Manager;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
 

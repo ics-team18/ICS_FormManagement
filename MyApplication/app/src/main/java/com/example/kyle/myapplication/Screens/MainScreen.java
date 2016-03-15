@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.kyle.myapplication.Database.Abstract_Table_Manager;
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Helpers.LoggedInUser;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;

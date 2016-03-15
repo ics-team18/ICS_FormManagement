@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        tools:context=".Screens.CreateEdit.CreateIncident"
+        tools:context=".Screens.CreateEdit.CreateEditIncident"
         android:weightSum="1">
 
         <Button

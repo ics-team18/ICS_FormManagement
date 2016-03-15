@@ -1,4 +1,4 @@
-package com.example.kyle.myapplication.Database;
+package com.example.kyle.myapplication.Database.Abstract;
 
 /**
  * Created by Kyle on 1/31/2016.

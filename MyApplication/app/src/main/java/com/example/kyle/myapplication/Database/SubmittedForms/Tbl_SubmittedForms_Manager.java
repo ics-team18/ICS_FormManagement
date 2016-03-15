@@ -1,7 +1,11 @@
-package com.example.kyle.myapplication.Database;
+package com.example.kyle.myapplication.Database.SubmittedForms;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
+import com.example.kyle.myapplication.Database.Incident.Tbl_Incident_Manager;
+import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
 
 import java.util.ArrayList;
 import java.util.List;

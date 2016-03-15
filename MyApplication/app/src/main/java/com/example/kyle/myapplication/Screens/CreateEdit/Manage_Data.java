@@ -1,4 +1,4 @@
-package com.example.kyle.myapplication.Screens;
+package com.example.kyle.myapplication.Screens.CreateEdit;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -7,9 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.kyle.myapplication.Database.Abstract_Table_Manager;
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
+import com.example.kyle.myapplication.Screens.DataList;
 
 public class Manage_Data extends AppCompatActivity
 {

@@ -1,4 +1,4 @@
-package com.example.kyle.myapplication.Screens;
+package com.example.kyle.myapplication.Screens.CreateEdit;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -16,22 +16,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kyle.myapplication.CustomControls.DataListGridAdapter;
-import com.example.kyle.myapplication.Database.Abstract_Table;
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
 import com.example.kyle.myapplication.Database.Database_Manager;
-import com.example.kyle.myapplication.Database.Tbl_IncidentLink;
-import com.example.kyle.myapplication.Database.Tbl_Personnel;
-import com.example.kyle.myapplication.Database.Tbl_Personnel_Manager;
-import com.example.kyle.myapplication.Database.Tbl_Role;
-import com.example.kyle.myapplication.Database.Tbl_Role_Manager;
+import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink;
+import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
+import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
+import com.example.kyle.myapplication.Database.Role.Tbl_Role;
+import com.example.kyle.myapplication.Database.Role.Tbl_Role_Manager;
 import com.example.kyle.myapplication.R;
-import com.example.kyle.myapplication.Screens.CreateEdit.CreateIncident;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class SetupPersonnel extends AppCompatActivity
+public class CreateEditIncidentLinks extends AppCompatActivity
 {
     private Database_Manager db;
     private GridView gridView;
@@ -48,7 +47,7 @@ public class SetupPersonnel extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_setuppersonnel);
+        setContentView(R.layout.content_createedit_incidentlinks);
         gridView = (GridView) findViewById(R.id.gridView);
         btnAdd = (Button) findViewById(R.id.btnAdd);
         btnClear = (Button) findViewById(R.id.btnClear);
@@ -59,7 +58,7 @@ public class SetupPersonnel extends AppCompatActivity
         db = new Database_Manager(this);
         setSpinnerData();
 
-        incidentLinks = new ArrayList<Abstract_Table>(CreateIncident.incidentLinks);
+        incidentLinks = new ArrayList<Abstract_Table>(CreateEditIncident.incidentLinks);
 
         btnAdd.setOnClickListener(new View.OnClickListener()
         {
@@ -120,7 +119,7 @@ public class SetupPersonnel extends AppCompatActivity
         //note we are passing an incident id of 1 but this will get overwritten with whatever the current id is when we create the incident record
         Tbl_IncidentLink toAdd = new Tbl_IncidentLink(1, personnel, role, ranking);
         toAdd.sqlMode = Abstract_Table.SQLMode.INSERT;
-        String anyErrors = toAdd.customIsValidRecord(selectedListPosition, toAdd, CreateIncident.incidentLinks);
+        String anyErrors = toAdd.customIsValidRecord(selectedListPosition, toAdd, CreateEditIncident.incidentLinks);
 
         if (anyErrors.isEmpty())
         {
@@ -129,7 +128,7 @@ public class SetupPersonnel extends AppCompatActivity
                 toAdd.incidentID = toUpdate.incidentID;
                 toAdd.incidentLinkID = toUpdate.incidentLinkID;
                 toAdd.sqlMode = Abstract_Table.SQLMode.UPDATE;
-                CreateIncident.incidentLinks.set(selectedListPosition, toAdd);
+                CreateEditIncident.incidentLinks.set(selectedListPosition, toAdd);
                 incidentLinks.set(selectedGridPosition, toAdd);
                 toUpdate = null;
                 btnAdd.setText("Add");
@@ -138,7 +137,7 @@ public class SetupPersonnel extends AppCompatActivity
             }
             else
             {
-                CreateIncident.incidentLinks.add(toAdd);
+                CreateEditIncident.incidentLinks.add(toAdd);
                 incidentLinks.add(toAdd);
             }
             gridView.invalidateViews();
@@ -194,7 +193,7 @@ public class SetupPersonnel extends AppCompatActivity
                 if (toUpdate == null)
                 {//don't allow the user to remove/edit a different row until they have finished updating
                     selectedGridPosition = position;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(SetupPersonnel.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CreateEditIncidentLinks.this);
                     builder.setMessage("Choose an option below.");
                     builder.setPositiveButton("Remove", new DialogInterface.OnClickListener()
                     {
@@ -202,10 +201,10 @@ public class SetupPersonnel extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int which)
                         {
                             Tbl_IncidentLink record = (Tbl_IncidentLink) incidentLinks.get(selectedGridPosition);
-                            record = CreateIncident.incidentLinks.get(CreateIncident.incidentLinks.indexOf(record));
+                            record = CreateEditIncident.incidentLinks.get(CreateEditIncident.incidentLinks.indexOf(record));
                             if (record.incidentLinkID == -1)
                             {
-                                CreateIncident.incidentLinks.remove(record);
+                                CreateEditIncident.incidentLinks.remove(record);
                             }
                             else
                             {
@@ -222,8 +221,8 @@ public class SetupPersonnel extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int which)
                         {
                             Tbl_IncidentLink record = (Tbl_IncidentLink) incidentLinks.get(selectedGridPosition);
-                            selectedListPosition = CreateIncident.incidentLinks.indexOf(record);
-                            toUpdate = CreateIncident.incidentLinks.get(selectedListPosition);
+                            selectedListPosition = CreateEditIncident.incidentLinks.indexOf(record);
+                            toUpdate = CreateEditIncident.incidentLinks.get(selectedListPosition);
                             btnAdd.setText("Update");
                             btnClear.setText("Revert Changes");
                             clear();
@@ -234,7 +233,7 @@ public class SetupPersonnel extends AppCompatActivity
             }
         });
 
-        gridView.setAdapter(new DataListGridAdapter(SetupPersonnel.this, incidentLinks, 15));
+        gridView.setAdapter(new DataListGridAdapter(CreateEditIncidentLinks.this, incidentLinks, 15));
 
         showHideNoDataLabel();
     }

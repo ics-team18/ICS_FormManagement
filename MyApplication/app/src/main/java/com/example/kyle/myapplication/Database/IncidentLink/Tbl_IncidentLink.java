@@ -1,4 +1,8 @@
-package com.example.kyle.myapplication.Database;
+package com.example.kyle.myapplication.Database.IncidentLink;
+
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
+import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
+import com.example.kyle.myapplication.Database.Role.Tbl_Role;
 
 import java.util.List;
 

@@ -1,4 +1,6 @@
-package com.example.kyle.myapplication.Database;
+package com.example.kyle.myapplication.Database.Personnel;
+
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
 
 /**
  * Created by Kyle on 1/31/2016.

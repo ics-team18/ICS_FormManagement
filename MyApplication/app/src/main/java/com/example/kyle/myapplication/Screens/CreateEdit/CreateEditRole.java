@@ -6,13 +6,13 @@ import android.view.WindowManager;
 
 import com.example.kyle.myapplication.R;
 
-public class CreateRole extends AppCompatActivity {
+public class CreateEditRole extends AppCompatActivity {
 
     public static boolean InEditMode = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_role);
+        setContentView(R.layout.activity_createedit_role);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 }

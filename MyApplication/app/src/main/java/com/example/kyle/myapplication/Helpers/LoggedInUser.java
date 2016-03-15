@@ -1,6 +1,6 @@
 package com.example.kyle.myapplication.Helpers;
 
-import com.example.kyle.myapplication.Database.Tbl_Personnel;
+import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
 
 /**
  * Created by Kyle on 2/16/2016.

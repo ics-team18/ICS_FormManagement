@@ -1,8 +1,12 @@
-package com.example.kyle.myapplication.Database;
+package com.example.kyle.myapplication.Database.Incident;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
+import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink;
+import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink_Manager;
 
 import java.util.ArrayList;
 import java.util.List;

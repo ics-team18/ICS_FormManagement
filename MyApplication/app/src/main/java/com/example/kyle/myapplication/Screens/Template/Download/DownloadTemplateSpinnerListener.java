@@ -1,4 +1,4 @@
-package com.example.kyle.myapplication.Screens;
+package com.example.kyle.myapplication.Screens.Template.Download;
 
 import android.view.View;
 import android.widget.AdapterView;
