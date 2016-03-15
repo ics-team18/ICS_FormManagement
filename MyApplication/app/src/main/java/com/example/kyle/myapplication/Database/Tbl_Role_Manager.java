@@ -44,7 +44,7 @@ public class Tbl_Role_Manager extends Abstract_Table_Manager<Tbl_Role>
         String whereClause = "";
         if (searchCritera.roleID > -1)
         {
-            whereClause += Attributes.ROLEID.name() + " = " + Integer.toString(searchCritera.roleID);
+            whereClause += Attributes.ROLEID.name() + " = " + Long.toString(searchCritera.roleID);
         }
         if (!searchCritera.title.isEmpty())
         {
@@ -68,7 +68,7 @@ public class Tbl_Role_Manager extends Abstract_Table_Manager<Tbl_Role>
     @Override
     public String GetPrimaryKeyValue(Tbl_Role record)
     {
-        return Integer.toString(record.roleID);
+        return Long.toString(record.roleID);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class Tbl_Role_Manager extends Abstract_Table_Manager<Tbl_Role>
         while (cursor.moveToNext())
         {
             Tbl_Role record = new Tbl_Role();
-            record.roleID = cursor.getInt(Attributes.ROLEID.ordinal());
+            record.roleID = cursor.getLong(Attributes.ROLEID.ordinal());
             record.title = cursor.getString(Attributes.TITLE.ordinal());
             resultList.add(record);
         }

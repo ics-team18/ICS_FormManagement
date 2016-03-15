@@ -30,7 +30,7 @@ public class MainScreen extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                OpenScreens.OpenDataListScreen(true, Abstract_Table_Manager.Table.INCIDENT);
+                OpenScreens.OpenDataListScreen(DataList.Mode.Edit, Abstract_Table_Manager.Table.INCIDENT);
             }
         });
 

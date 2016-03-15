@@ -102,7 +102,7 @@ public class Manage_Data extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                openDataListScreen(true, table, selectionDialog);
+                openDataListScreen(DataList.Mode.Edit, table, selectionDialog);
             }
         });
 
@@ -111,14 +111,14 @@ public class Manage_Data extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                openDataListScreen(false, table, selectionDialog);
+                openDataListScreen(DataList.Mode.View, table, selectionDialog);
             }
         });
     }
 
-    private void openDataListScreen(boolean forEditing, Abstract_Table_Manager.Table table, Dialog selectionDialog)
+    private void openDataListScreen(DataList.Mode mode, Abstract_Table_Manager.Table table, Dialog selectionDialog)
     {
-        OpenScreens.OpenDataListScreen(forEditing, table);
+        OpenScreens.OpenDataListScreen(mode, table);
         selectionDialog.cancel();
     }
 }

@@ -41,39 +41,47 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
     }
 
     @Override
-    public boolean Insert(SQLiteDatabase db, Tbl_Incident toInsert)
+    public long Insert(SQLiteDatabase db, Tbl_Incident toInsert)
     {
-        boolean error = super.Insert(db, toInsert);
-        if (!error)
+        long resultID = super.Insert(db, toInsert);
+        if (resultID != -1)
         {
             for (int i = 0; i < toInsert.incidentLinks.size(); i++)
             {
-                error = Tbl_IncidentLink_Manager.current.Insert(db, toInsert.incidentLinks.get(i));
-                if (error)
+                Tbl_IncidentLink incidentLink = toInsert.incidentLinks.get(i);
+                incidentLink.incidentID = resultID;
+                long id = Tbl_IncidentLink_Manager.current.Insert(db, incidentLink);
+                if (id == -1)
                 {
                     break;
                 }
             }
         }
-        return error;
+        return resultID;
     }
 
     @Override
     public boolean Update(SQLiteDatabase db, Tbl_Incident toUpdate)
     {
-        boolean error = super.Update(db, toUpdate);
-        if (!error)
+        super.Update(db, toUpdate);
+        for (int i = 0; i < toUpdate.incidentLinks.size(); i++)
         {
-            for (int i = 0; i < toUpdate.incidentLinks.size(); i++)
+            Tbl_IncidentLink incidentLink = toUpdate.incidentLinks.get(i);
+            switch (incidentLink.sqlMode)
             {
-                error = Tbl_IncidentLink_Manager.current.Update(db, toUpdate.incidentLinks.get(i));
-                if (error)
-                {
+                case INSERT:
+                    incidentLink.incidentID = toUpdate.incidentID;
+                    Tbl_IncidentLink_Manager.current.Insert(db, incidentLink);
                     break;
-                }
+                case DELETE:
+                    Tbl_IncidentLink_Manager.current.Delete(db, incidentLink);
+                    break;
+                case UPDATE:
+                    Tbl_IncidentLink_Manager.current.Update(db, incidentLink);
+                    break;
             }
         }
-        return error;
+        return true;
     }
 
     @Override
@@ -117,7 +125,7 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
         String whereClause = "";
         if (searchCritera.incidentID > -1)
         {
-            whereClause += Attributes.INCIDENTID.name() + " = " + Integer.toString(searchCritera.incidentID);
+            whereClause += Attributes.INCIDENTID.name() + " = " + Long.toString(searchCritera.incidentID);
         }
         if (!searchCritera.startTime.isEmpty())
         {
@@ -171,7 +179,7 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
     @Override
     public String GetPrimaryKeyValue(Tbl_Incident record)
     {
-        return Integer.toString(record.incidentID);
+        return Long.toString(record.incidentID);
     }
 
     @Override
@@ -181,7 +189,7 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
         while (cursor.moveToNext())
         {
             Tbl_Incident record = new Tbl_Incident();
-            record.incidentID = cursor.getInt(Attributes.INCIDENTID.ordinal());
+            record.incidentID = cursor.getLong(Attributes.INCIDENTID.ordinal());
             record.startTime = cursor.getString(Attributes.STARTTIME.ordinal());
             record.endTime = cursor.getString(Attributes.ENDTIME.ordinal());
             record.description = cursor.getString(Attributes.DESCRIPTION.ordinal());

@@ -5,7 +5,7 @@ package com.example.kyle.myapplication.Database;
  */
 public class Tbl_Personnel extends Abstract_Table
 {
-    public int personnelID = -1;
+    public long personnelID = -1;
     public String firstName = "";
     public String lastName = "";
     public String email = "";
@@ -74,9 +74,19 @@ public class Tbl_Personnel extends Abstract_Table
     }
 
     @Override
+    public String toString()
+    {
+        String value = "";
+        if (!this.lastName.isEmpty() && !this.firstName.isEmpty())
+        {
+            value = getDataGridDisplayValue();
+        }
+        return value;
+    }
+    @Override
     public String getDataGridPopupMessageValue()
     {
-        return "ID: " + Integer.toString(this.personnelID) + "\n" +
+        return "ID: " + Long.toString(this.personnelID) + "\n" +
                 "First Name: " + this.firstName + "\n" +
                 "Last Name: " + this.lastName + "\n" +
                 "Email: " + this.email + "\n" +

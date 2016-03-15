@@ -5,9 +5,9 @@ package com.example.kyle.myapplication.Database;
  */
 public class Tbl_SubmittedForms
 {
-    public int formID = -1;
-    public int incidentID = -1;
-    public int personnelID = -1;
+    public long formID = -1;
+    public long incidentID = -1;
+    public long personnelID = -1;
     public String form = "";
     public String timeSubmitted = "";
 
@@ -16,7 +16,7 @@ public class Tbl_SubmittedForms
     {
     }
 
-    public Tbl_SubmittedForms(int incidentID, int personnelID, String form, String timeSubmitted)
+    public Tbl_SubmittedForms(long incidentID, long personnelID, String form, String timeSubmitted)
     {
         this.incidentID = incidentID;
         this.personnelID = personnelID;

@@ -25,12 +25,11 @@ public abstract class Abstract_Table_Manager<T>
         db.execSQL("CREATE TABLE IF NOT EXISTS " + GetTableName() + "(" + GetCreateScript() + ")");
     }
 
-    //returns true if there is an error
-    public boolean Insert(SQLiteDatabase db, T toInsert)
+    public long Insert(SQLiteDatabase db, T toInsert)
     {
         ContentValues values = GetContentValues(toInsert, false);
         long result = db.insert(GetTableName(), null, values);
-        return result == -1;
+        return result;
     }
 
     public boolean Update(SQLiteDatabase db, T toUpdate)
@@ -78,6 +77,19 @@ public abstract class Abstract_Table_Manager<T>
     public int GetNextID(SQLiteDatabase db)
     {
         String query = "SELECT SEQ FROM SQLITE_SEQUENCE WHERE NAME = '" + GetTableName() + "'";
+        int id = 1;
+        Cursor result = db.rawQuery(query, null);
+        if(result.moveToFirst())
+        {
+            id = result.getInt(0);
+            ++id;
+        }
+        return id;
+    }
+
+    public int GetLastID(SQLiteDatabase db)
+    {
+        String query = "SELECT MAX(" + GetPrimaryKey() + ") FROM " + GetTableName();
         int id = 1;
         Cursor result = db.rawQuery(query, null);
         if(result.moveToFirst())

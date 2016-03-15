@@ -18,6 +18,7 @@ import com.example.kyle.myapplication.Database.Tbl_Personnel_Manager;
 import com.example.kyle.myapplication.Helpers.LoggedInUser;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
+import com.example.kyle.myapplication.Screens.DataList;
 
 public class CreatePersonnel extends AppCompatActivity
 {
@@ -125,7 +126,7 @@ public class CreatePersonnel extends AppCompatActivity
                     toUpdate = record;
                     Tbl_Personnel_Manager.current.Update(db.getWritableDatabase(), toUpdate);
                     Toast.makeText(this, "Personnel Updated", Toast.LENGTH_LONG).show();
-                    OpenScreens.OpenDataListScreen(true, Abstract_Table_Manager.Table.PERSONNEL);
+                    OpenScreens.OpenDataListScreen(DataList.Mode.Edit, Abstract_Table_Manager.Table.PERSONNEL);
                 }
                 else
                 {

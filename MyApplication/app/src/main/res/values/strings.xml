@@ -40,4 +40,8 @@
         <item>ICS Form 206</item>
     </string-array>
 
+    <string name="title_activity_upload_template">UploadTemplate</string>
+
+    <string name="titleUploadTemplate">Upload Template</string>
+
 </resources>

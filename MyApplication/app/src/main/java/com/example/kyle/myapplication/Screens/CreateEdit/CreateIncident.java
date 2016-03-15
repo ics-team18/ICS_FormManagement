@@ -24,8 +24,6 @@ import com.example.kyle.myapplication.Database.Database_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Incident;
 import com.example.kyle.myapplication.Database.Tbl_IncidentLink;
 import com.example.kyle.myapplication.Database.Tbl_Incident_Manager;
-import com.example.kyle.myapplication.Database.Tbl_Personnel;
-import com.example.kyle.myapplication.Database.Tbl_Personnel_Manager;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
 import com.example.kyle.myapplication.Screens.DataList;
@@ -38,6 +36,7 @@ import com.google.android.gms.location.LocationServices;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,7 +45,7 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
     private Database_Manager db;
     private TextView lblIncidentID, lblDate;
     private EditText txtDescription, txtAddress, txtCitySTZip, txtLatitude, txtLongitude;
-    private List<Tbl_IncidentLink> incidentLinks = new ArrayList<>();
+    public static List<Tbl_IncidentLink> incidentLinks = new ArrayList<>();
     public static Tbl_Incident toUpdate = null;
     private static final int PERMISSION_REQUEST_CODE = 1;
     private GoogleApiClient googleApiClient;
@@ -230,14 +229,18 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
     {
         if (toUpdate != null)
         {
-            lblIncidentID.setText(Integer.toString(toUpdate.incidentID));
+            lblIncidentID.setText(Long.toString(toUpdate.incidentID));
             lblDate.setText(toUpdate.startTime);
             txtDescription.setText(toUpdate.description);
             txtAddress.setText(toUpdate.address);
             txtCitySTZip.setText(toUpdate.citySTZip);
             txtLatitude.setText(Double.toString(toUpdate.latitude));
             txtLongitude.setText(Double.toString(toUpdate.longitude));
-            incidentLinks = toUpdate.incidentLinks;
+            incidentLinks = new ArrayList<Tbl_IncidentLink>(toUpdate.incidentLinks.size());
+            for (Tbl_IncidentLink element : toUpdate.incidentLinks)
+            {
+                incidentLinks.add(new Tbl_IncidentLink(element));
+            }
         }
         else
         {
@@ -280,7 +283,7 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
                 Tbl_Incident_Manager.current.Update(db.getWritableDatabase(), toUpdate);
                 String message = closeIncident ? "Incident Closed" : "Incident Updated";
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-                OpenScreens.OpenDataListScreen(true, Abstract_Table_Manager.Table.INCIDENT);
+                OpenScreens.OpenDataListScreen(DataList.Mode.Edit, Abstract_Table_Manager.Table.INCIDENT);
             }
             else
             {
@@ -351,13 +354,13 @@ public class CreateIncident extends AppCompatActivity implements GoogleApiClient
 
     private void setupPersonnel()
     {
-
+        OpenScreens.OpenSetupPersonnelScreen();
     }
 
     @Override
     public void onConnected(Bundle connectionHint)
     {
-        if (toUpdate != null)
+        if (toUpdate == null)
         {
             setLocation();
         }

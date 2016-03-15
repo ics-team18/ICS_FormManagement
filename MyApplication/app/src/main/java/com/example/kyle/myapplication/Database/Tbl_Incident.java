@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Tbl_Incident extends Abstract_Table
 {
-    public int incidentID = -1;
+    public long incidentID = -1;
     public String startTime = "";
     public String endTime = "";
     public String description = "";
@@ -104,7 +104,7 @@ public class Tbl_Incident extends Abstract_Table
                 personnelAndRoles += "\n";
             }
         }
-        return "ID: " + Integer.toString(this.incidentID) + "\n" +
+        return "ID: " + Long.toString(this.incidentID) + "\n" +
                 "Start Time: " + this.startTime + "\n" +
                 "End Time: " + this.endTime + "\n" +
                 "Description: " + this.description + "\n" +

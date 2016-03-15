@@ -56,7 +56,7 @@ public class Tbl_Personnel_Manager extends Abstract_Table_Manager<Tbl_Personnel>
         String whereClause = "";
         if (searchCritera.personnelID > -1)
         {
-            whereClause += " AND " + Attributes.PERSONNELID.name() + " = '" + Integer.toString(searchCritera.personnelID) + "'";
+            whereClause += " AND " + Attributes.PERSONNELID.name() + " = '" + Long.toString(searchCritera.personnelID) + "'";
         }
         if (!searchCritera.firstName.isEmpty())
         {
@@ -111,7 +111,7 @@ public class Tbl_Personnel_Manager extends Abstract_Table_Manager<Tbl_Personnel>
     @Override
     public String GetPrimaryKeyValue(Tbl_Personnel record)
     {
-        return Integer.toString(record.personnelID);
+        return Long.toString(record.personnelID);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class Tbl_Personnel_Manager extends Abstract_Table_Manager<Tbl_Personnel>
         while (cursor.moveToNext())
         {
             Tbl_Personnel record = new Tbl_Personnel();
-            record.personnelID = cursor.getInt(Attributes.PERSONNELID.ordinal());
+            record.personnelID = cursor.getLong(Attributes.PERSONNELID.ordinal());
             record.firstName = cursor.getString(Attributes.FIRSTNAME.ordinal());
             record.lastName = cursor.getString(Attributes.LASTNAME.ordinal());
             record.email = cursor.getString(Attributes.EMAIL.ordinal());

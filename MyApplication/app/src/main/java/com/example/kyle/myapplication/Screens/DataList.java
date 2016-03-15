@@ -11,7 +11,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.kyle.myapplication.CustomControls.CustomGridAdapter;
+import com.example.kyle.myapplication.CustomControls.DataListGridAdapter;
 import com.example.kyle.myapplication.Database.Abstract_Table;
 import com.example.kyle.myapplication.Database.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Database.Database_Manager;
@@ -29,12 +29,17 @@ import java.util.List;
 
 public class DataList extends AppCompatActivity
 {
+    public enum Mode
+    {
+        View,
+        Edit,
+    }
     private Database_Manager db;
     private GridView gridView;
     private TextView lblNoData;
     private List<Abstract_Table> valueList;
     public static Abstract_Table selectedRecord;
-    public static boolean forEditing = false;
+    public static Mode mode = Mode.View;
     public static Abstract_Table_Manager.Table SpecificTable = Abstract_Table_Manager.Table.NONE;
 
     @Override
@@ -46,6 +51,11 @@ public class DataList extends AppCompatActivity
         gridView = (GridView) findViewById(R.id.gridView);
         lblNoData = (TextView) findViewById(R.id.lblNoData);
         showGrid();
+    }
+
+    private boolean inEditMode()
+    {
+        return mode == Mode.Edit;
     }
 
     private void showGrid()
@@ -64,7 +74,7 @@ public class DataList extends AppCompatActivity
                 break;
             case INCIDENT:
                 Tbl_Incident searchCriteria = new Tbl_Incident();
-                if (forEditing)
+                if (inEditMode())
                 {
                     searchCriteria.endTime = "= ''";
                 }
@@ -74,7 +84,7 @@ public class DataList extends AppCompatActivity
                 //valueList = new ArrayList<Abstract_Table>(Tbl_SubmittedForms_Manager.current.Select(db.getReadableDatabase()));
                 break;
         }
-        if (forEditing)
+        if (inEditMode())
         {
             lblNoData.setText("No data to edit");
             gridView.setOnItemClickListener(new OnItemClickListener()
@@ -107,7 +117,7 @@ public class DataList extends AppCompatActivity
                 }
             });
         }
-        gridView.setAdapter(new CustomGridAdapter(DataList.this, valueList));
+        gridView.setAdapter(new DataListGridAdapter(DataList.this, valueList));
 
         showHideNoDataLabel();
     }
@@ -120,7 +130,7 @@ public class DataList extends AppCompatActivity
             switch (which)
             {
                 case DialogInterface.BUTTON_POSITIVE:
-                    if (forEditing)
+                    if (inEditMode())
                     {
                         switch (SpecificTable)
                         {

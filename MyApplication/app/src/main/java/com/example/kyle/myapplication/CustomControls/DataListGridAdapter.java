@@ -17,12 +17,13 @@ import java.util.List;
 /**
  * Created by Kyle on 2/2/2016.
  */
-public class CustomGridAdapter extends BaseAdapter
+public class DataListGridAdapter extends BaseAdapter
 {
+    public int textSize = 30;
     Context context;
     List<Abstract_Table> valueList = new ArrayList<Abstract_Table>();
 
-    public CustomGridAdapter(Context context, List<Abstract_Table> valueList)
+    public DataListGridAdapter(Context context, List<Abstract_Table> valueList)
     {
         this.context = context;
         Collections.sort(valueList, new Comparator<Abstract_Table>()
@@ -34,6 +35,20 @@ public class CustomGridAdapter extends BaseAdapter
             }
         });
         this.valueList = valueList;
+        for (int i = valueList.size() - 1; i >= 0; i--)
+        {
+            Abstract_Table element = valueList.get(i);
+            if (element.sqlMode == Abstract_Table.SQLMode.DELETE)
+            {
+                valueList.remove(i);
+            }
+        }
+    }
+
+    public DataListGridAdapter(Context context, List<Abstract_Table> valueList, int textSize)
+    {
+        this(context, valueList);
+        this.textSize = textSize;
     }
 
     @Override
@@ -58,7 +73,7 @@ public class CustomGridAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         TextView lblName = new TextView(context);
-        lblName.setTextSize(30);
+        lblName.setTextSize(textSize);
         lblName.setText(valueList.get(position).getDataGridDisplayValue());
         return lblName;
     }

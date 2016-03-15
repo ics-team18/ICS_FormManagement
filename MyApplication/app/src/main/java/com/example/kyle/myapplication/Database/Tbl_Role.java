@@ -5,7 +5,7 @@ package com.example.kyle.myapplication.Database;
  */
 public class Tbl_Role extends Abstract_Table
 {
-    public int roleID = -1;
+    public long roleID = -1;
     public String title = "";
 
     public Tbl_Role()
@@ -41,9 +41,14 @@ public class Tbl_Role extends Abstract_Table
     }
 
     @Override
+    public String toString()
+    {
+        return this.title;
+    }
+    @Override
     public String getDataGridPopupMessageValue()
     {
-        return "ID: " + Integer.toString(this.roleID) + "\n" +
+        return "ID: " + Long.toString(this.roleID) + "\n" +
                 "Title: " + this.title;
     }
 }

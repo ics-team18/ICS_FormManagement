@@ -5,6 +5,16 @@ package com.example.kyle.myapplication.Database;
  */
 public abstract class Abstract_Table
 {
+    public enum SQLMode
+    {
+        NONE,
+        INSERT,
+        DELETE,
+        UPDATE
+    }
+
+    public SQLMode sqlMode = SQLMode.NONE;
+
     public abstract String isValidRecord();
 
     public abstract String getDataGridDisplayValue();

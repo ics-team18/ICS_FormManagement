@@ -35,11 +35,17 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+            android:name=".Screens.SetupPersonnel"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".Screens.Manage_Data"
             android:label="@string/title_activity_manage_data"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".Screens.DownloadTemplate">
+        </activity>
+        <activity android:name=".Screens.UploadTemplate">
         </activity>
         <activity
             android:name=".Screens.CreateEdit.CreateIncident"

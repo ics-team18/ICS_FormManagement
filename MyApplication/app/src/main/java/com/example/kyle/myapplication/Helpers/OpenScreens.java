@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import com.example.kyle.myapplication.Database.Abstract_Table;
 import com.example.kyle.myapplication.Database.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Database.Tbl_Incident;
+import com.example.kyle.myapplication.Database.Tbl_IncidentLink;
 import com.example.kyle.myapplication.Database.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Tbl_Role;
 import com.example.kyle.myapplication.R;
@@ -18,6 +20,9 @@ import com.example.kyle.myapplication.Screens.DataList;
 import com.example.kyle.myapplication.Screens.Login;
 import com.example.kyle.myapplication.Screens.MainScreen;
 import com.example.kyle.myapplication.Screens.Manage_Data;
+import com.example.kyle.myapplication.Screens.SetupPersonnel;
+
+import java.util.List;
 
 /**
  * Created by Kyle on 2/27/2016.
@@ -52,9 +57,9 @@ public class OpenScreens extends Activity
         context.startActivity(new Intent(context, Manage_Data.class));
     }
 
-    public static void OpenDataListScreen(boolean forEditing, Abstract_Table_Manager.Table table)
+    public static void OpenDataListScreen(DataList.Mode mode, Abstract_Table_Manager.Table table)
     {
-        DataList.forEditing = forEditing;
+        DataList.mode = mode;
         DataList.SpecificTable = table;
         context.startActivity(new Intent(context, DataList.class));
     }
@@ -76,5 +81,10 @@ public class OpenScreens extends Activity
     {
         //CreateRole.toUpdate = toUpdate;
         context.startActivity(new Intent(context, CreateRole.class));
+    }
+
+    public static void OpenSetupPersonnelScreen()
+    {
+        context.startActivity(new Intent(context, SetupPersonnel.class));
     }
 }

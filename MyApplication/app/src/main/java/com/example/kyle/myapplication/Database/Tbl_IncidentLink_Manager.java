@@ -77,19 +77,19 @@ public class Tbl_IncidentLink_Manager extends Abstract_Table_Manager<Tbl_Inciden
         String whereClause = "";
         if (searchCritera.incidentLinkID > -1)
         {
-            whereClause += Attributes.INCIDENTLINKID.name() + " = " + Integer.toString(searchCritera.incidentLinkID);
+            whereClause += Attributes.INCIDENTLINKID.name() + " = " + Long.toString(searchCritera.incidentLinkID);
         }
         if (searchCritera.incidentID > -1)
         {
-            whereClause += Attributes.INCIDENTID.name() + " = " + Integer.toString(searchCritera.incidentID);
+            whereClause += Attributes.INCIDENTID.name() + " = " + Long.toString(searchCritera.incidentID);
         }
         if (searchCritera.personnelID > -1)
         {
-            whereClause += Attributes.PERSONNELID.name() + " = " + Integer.toString(searchCritera.personnelID);
+            whereClause += Attributes.PERSONNELID.name() + " = " + Long.toString(searchCritera.personnelID);
         }
         if (searchCritera.roleID > -1)
         {
-            whereClause += Attributes.ROLEID.name() + " = " + Integer.toString(searchCritera.roleID);
+            whereClause += Attributes.ROLEID.name() + " = " + Long.toString(searchCritera.roleID);
         }
         if (searchCritera.ranking > -1)
         {
@@ -117,7 +117,7 @@ public class Tbl_IncidentLink_Manager extends Abstract_Table_Manager<Tbl_Inciden
     @Override
     public String GetPrimaryKeyValue(Tbl_IncidentLink record)
     {
-        return Integer.toString(record.incidentLinkID);
+        return Long.toString(record.incidentLinkID);
     }
 
     @Override
@@ -127,10 +127,10 @@ public class Tbl_IncidentLink_Manager extends Abstract_Table_Manager<Tbl_Inciden
         while (cursor.moveToNext())
         {
             Tbl_IncidentLink record = new Tbl_IncidentLink();
-            record.incidentLinkID = cursor.getInt(Attributes.INCIDENTLINKID.ordinal());
-            record.incidentID = cursor.getInt(Attributes.INCIDENTID.ordinal());
-            record.personnelID = cursor.getInt(Attributes.PERSONNELID.ordinal());
-            record.roleID = cursor.getInt(Attributes.ROLEID.ordinal());
+            record.incidentLinkID = cursor.getLong(Attributes.INCIDENTLINKID.ordinal());
+            record.incidentID = cursor.getLong(Attributes.INCIDENTID.ordinal());
+            record.personnelID = cursor.getLong(Attributes.PERSONNELID.ordinal());
+            record.roleID = cursor.getLong(Attributes.ROLEID.ordinal());
             record.ranking = cursor.getInt(Attributes.RANKING.ordinal());
             resultList.add(record);
         }

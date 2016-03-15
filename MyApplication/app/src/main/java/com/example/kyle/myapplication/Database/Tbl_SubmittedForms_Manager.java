@@ -52,7 +52,7 @@ public class Tbl_SubmittedForms_Manager extends Abstract_Table_Manager<Tbl_Submi
         String whereClause = "";
         if (searchCritera.formID > -1)
         {
-            whereClause += Attributes.FORMID.name() + " = " + Integer.toString(searchCritera.formID);
+            whereClause += Attributes.FORMID.name() + " = " + Long.toString(searchCritera.formID);
         }
         if (searchCritera.incidentID > -1)
         {
@@ -91,7 +91,7 @@ public class Tbl_SubmittedForms_Manager extends Abstract_Table_Manager<Tbl_Submi
     @Override
     public String GetPrimaryKeyValue(Tbl_SubmittedForms record)
     {
-        return Integer.toString(record.formID);
+        return Long.toString(record.formID);
     }
 
     @Override
@@ -101,9 +101,9 @@ public class Tbl_SubmittedForms_Manager extends Abstract_Table_Manager<Tbl_Submi
         while (cursor.moveToNext())
         {
             Tbl_SubmittedForms record = new Tbl_SubmittedForms();
-            record.formID = cursor.getInt(Attributes.FORMID.ordinal());
-            record.incidentID = cursor.getInt(Attributes.INCIDENTID.ordinal());
-            record.personnelID = cursor.getInt(Attributes.PERSONNELID.ordinal());
+            record.formID = cursor.getLong(Attributes.FORMID.ordinal());
+            record.incidentID = cursor.getLong(Attributes.INCIDENTID.ordinal());
+            record.personnelID = cursor.getLong(Attributes.PERSONNELID.ordinal());
             record.form = cursor.getString(Attributes.FORM.ordinal());
             record.timeSubmitted = cursor.getString(Attributes.TIMESUBMITTED.ordinal());
             resultList.add(record);
