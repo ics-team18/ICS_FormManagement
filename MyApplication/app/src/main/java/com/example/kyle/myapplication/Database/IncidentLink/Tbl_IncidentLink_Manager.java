@@ -39,14 +39,10 @@ public class Tbl_IncidentLink_Manager extends Abstract_Table_Manager<Tbl_Inciden
             Tbl_IncidentLink incidentLink = incidentLinkList.get(i);
 
             //get the personnel for this link record
-            Tbl_Personnel personnelSearchCriteria = new Tbl_Personnel();
-            personnelSearchCriteria.personnelID = incidentLink.personnelID;
-            incidentLink.personnel = Tbl_Personnel_Manager.current.Select(db, personnelSearchCriteria).get(0);
+            incidentLink.personnel = Tbl_Personnel_Manager.current.Select(db, new Tbl_Personnel(incidentLink.personnelID)).get(0);
 
             //get the role for this link record
-            Tbl_Role roleSearchCriteria = new Tbl_Role();
-            roleSearchCriteria.roleID = incidentLink.roleID;
-            incidentLink.role = Tbl_Role_Manager.current.Select(db, roleSearchCriteria).get(0);
+            incidentLink.role = Tbl_Role_Manager.current.Select(db, new Tbl_Role(incidentLink.roleID)).get(0);
         }
         return incidentLinkList;
     }

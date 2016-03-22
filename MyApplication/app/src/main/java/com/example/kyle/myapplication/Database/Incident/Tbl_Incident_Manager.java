@@ -37,9 +37,10 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
         for (int i = 0; i < incidentList.size(); i++)
         {
             Tbl_Incident incident = incidentList.get(i);
-            Tbl_IncidentLink linkSearchCriteria = new Tbl_IncidentLink();
-            linkSearchCriteria.incidentID = incident.incidentID;
-            incident.incidentLinks = Tbl_IncidentLink_Manager.current.Select(db, linkSearchCriteria);
+            //get the incident links for this record
+            Tbl_IncidentLink incidentLink = new Tbl_IncidentLink();
+            incidentLink.incidentID = incident.incidentID;
+            incident.incidentLinks = Tbl_IncidentLink_Manager.current.Select(db, incidentLink);
         }
         return incidentList;
     }

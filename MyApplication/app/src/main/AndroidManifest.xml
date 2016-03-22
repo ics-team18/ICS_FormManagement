@@ -34,6 +34,8 @@
             android:name=".Screens.DataList"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity android:name=".Screens.CreateEdit.CreateEditTemplates"></activity>
+        <activity android:name=".Screens.DownloadTemplate.Download.DownloadTemplate"></activity>
         <activity
             android:name=".Screens.CreateEdit.CreateEditIncidentLinks"
             android:theme="@style/AppTheme.NoActionBar">
@@ -42,10 +44,6 @@
             android:name=".Screens.CreateEdit.Manage_Data"
             android:label="@string/title_activity_manage_data"
             android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".Screens.Template.Download.DownloadTemplate">
-        </activity>
-        <activity android:name=".Screens.Template.Upload.UploadTemplate">
         </activity>
         <activity
             android:name=".Screens.CreateEdit.CreateEditIncident"

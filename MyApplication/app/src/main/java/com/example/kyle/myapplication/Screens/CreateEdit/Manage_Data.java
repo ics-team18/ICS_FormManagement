@@ -23,6 +23,7 @@ public class Manage_Data extends AppCompatActivity
         Button btnRoles = (Button) findViewById(R.id.btnRoles);
         Button btnIncidents = (Button) findViewById(R.id.btnIncidents);
         Button btnSubmittedForms = (Button) findViewById(R.id.btnSubmittedForms);
+        Button btnTemplates = (Button) findViewById(R.id.btnTemplates);
 
         btnPersonnel.setOnClickListener(new View.OnClickListener()
         {
@@ -59,6 +60,15 @@ public class Manage_Data extends AppCompatActivity
                 SelectionMenu(Abstract_Table_Manager.Table.SUBMITTEDFORMS);
             }
         });
+
+        btnTemplates.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                SelectionMenu(Abstract_Table_Manager.Table.TEMPLATES);
+            }
+        });
     }
 
     private void SelectionMenu(final Abstract_Table_Manager.Table table)
@@ -78,6 +88,7 @@ public class Manage_Data extends AppCompatActivity
             btnCreate.setVisibility(View.GONE);
             btnEdit.setVisibility(View.GONE);
         }
+
         btnCreate.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -93,6 +104,9 @@ public class Manage_Data extends AppCompatActivity
                         break;
                     case SUBMITTEDFORMS:
                         break;
+                    case TEMPLATES:
+                        OpenScreens.OpenUploadTemplatesScreen(null);
+                    break;
                 }
                 selectionDialog.cancel();
             }

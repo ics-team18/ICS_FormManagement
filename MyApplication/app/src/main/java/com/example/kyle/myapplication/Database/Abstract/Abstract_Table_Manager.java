@@ -17,6 +17,7 @@ public abstract class Abstract_Table_Manager<T>
         PERSONNEL,
         ROLE,
         INCIDENT,
+        TEMPLATES,
         SUBMITTEDFORMS,
     }
 
@@ -61,9 +62,9 @@ public abstract class Abstract_Table_Manager<T>
             whereClause = GetSelectScript(searchCriteria);
             if (!whereClause.isEmpty())
             {
-                whereClause = whereClause.replace("= NOT NULL","IS NOT NULL");
-                whereClause = whereClause.replace("= NULL","IS NULL");
-                whereClause = whereClause.replace("= !=","!=");
+                whereClause = whereClause.replace("= NOT NULL", "IS NOT NULL");
+                whereClause = whereClause.replace("= NULL", "IS NULL");
+                whereClause = whereClause.replace("= !=", "!=");
                 whereClause = whereClause.replace("= =", "=");
                 whereClause = "WHERE " + whereClause;
                 whereClause = whereClause.replace("WHERE  AND ", "WHERE ");
@@ -79,7 +80,7 @@ public abstract class Abstract_Table_Manager<T>
         String query = "SELECT SEQ FROM SQLITE_SEQUENCE WHERE NAME = '" + GetTableName() + "'";
         int id = 1;
         Cursor result = db.rawQuery(query, null);
-        if(result.moveToFirst())
+        if (result.moveToFirst())
         {
             id = result.getInt(0);
             ++id;
@@ -92,7 +93,7 @@ public abstract class Abstract_Table_Manager<T>
         String query = "SELECT MAX(" + GetPrimaryKey() + ") FROM " + GetTableName();
         int id = 1;
         Cursor result = db.rawQuery(query, null);
-        if(result.moveToFirst())
+        if (result.moveToFirst())
         {
             id = result.getInt(0);
             ++id;

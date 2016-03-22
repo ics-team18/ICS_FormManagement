@@ -133,7 +133,6 @@ public class CreateEditIncidentLinks extends AppCompatActivity
                 toUpdate = null;
                 btnAdd.setText("Add");
                 btnClear.setText("Clear");
-                clear();
             }
             else
             {

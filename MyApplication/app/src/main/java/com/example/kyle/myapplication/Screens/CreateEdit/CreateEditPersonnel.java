@@ -33,7 +33,6 @@ public class CreateEditPersonnel extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createedit_personnel);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         db = new Database_Manager(this);
         txtFirstName = (EditText) findViewById(R.id.txtFirstName);
         txtLastName = (EditText) findViewById(R.id.txtLastName);
@@ -127,13 +126,14 @@ public class CreateEditPersonnel extends AppCompatActivity
                     Tbl_Personnel_Manager.current.Update(db.getWritableDatabase(), toUpdate);
                     Toast.makeText(this, "Personnel Updated", Toast.LENGTH_LONG).show();
                     OpenScreens.OpenDataListScreen(DataList.Mode.Edit, Abstract_Table_Manager.Table.PERSONNEL);
+                    finish();
                 }
                 else
                 {
                     Tbl_Personnel_Manager.current.Insert(db.getWritableDatabase(), record);
                     Toast.makeText(this, "Personnel Added", Toast.LENGTH_LONG).show();
+                    clear();
                 }
-                finish();
             }
             else
             {

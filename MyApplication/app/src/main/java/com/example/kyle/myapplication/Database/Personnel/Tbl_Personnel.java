@@ -20,6 +20,11 @@ public class Tbl_Personnel extends Abstract_Table
     {
     }
 
+    public Tbl_Personnel(long personnelID)
+    {
+        this.personnelID = personnelID;
+    }
+
     public Tbl_Personnel(String firstName, String lastName, String email, String password, String mobilePhone, String title, Boolean isSupervisor)
     {
         this.firstName = firstName;

@@ -283,13 +283,14 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
                 String message = closeIncident ? "Incident Closed" : "Incident Updated";
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
                 OpenScreens.OpenDataListScreen(DataList.Mode.Edit, Abstract_Table_Manager.Table.INCIDENT);
+                finish();
             }
             else
             {
                 Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), record);
                 Toast.makeText(this, "Incident Created", Toast.LENGTH_LONG).show();
+                clear();
             }
-            finish();
         }
         else
         {

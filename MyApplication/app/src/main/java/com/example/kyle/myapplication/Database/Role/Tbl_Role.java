@@ -14,6 +14,11 @@ public class Tbl_Role extends Abstract_Table
     {
     }
 
+    public Tbl_Role(long roleID)
+    {
+        this.roleID = roleID;
+    }
+
     public Tbl_Role( String title)
     {
         this.title = title;

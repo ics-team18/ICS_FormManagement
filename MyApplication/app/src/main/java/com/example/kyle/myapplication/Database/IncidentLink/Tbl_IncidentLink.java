@@ -23,6 +23,11 @@ public class Tbl_IncidentLink extends Abstract_Table
     {
     }
 
+    public Tbl_IncidentLink(long incidentLinkID)
+    {
+        this.incidentLinkID = incidentLinkID;
+    }
+
     public Tbl_IncidentLink(long incidentID, long personnelID, long roleID, int ranking)
     {
         this.incidentID = incidentID;
@@ -33,12 +38,9 @@ public class Tbl_IncidentLink extends Abstract_Table
 
     public Tbl_IncidentLink(long incidentID, Tbl_Personnel personnel, Tbl_Role role, int ranking)
     {
-        this.incidentID = incidentID;
+        this(incidentID, personnel.personnelID, role.roleID, ranking);
         this.personnel = personnel;
-        this.personnelID = personnel.personnelID;
         this.role = role;
-        this.roleID = role.roleID;
-        this.ranking = ranking;
     }
 
     public Tbl_IncidentLink(Tbl_IncidentLink toClone)

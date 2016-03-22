@@ -16,6 +16,8 @@ import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role_Manager;
+import com.example.kyle.myapplication.Database.Templates.Tbl_Templates;
+import com.example.kyle.myapplication.Database.Templates.Tbl_Templates_Manager;
 import com.example.kyle.myapplication.Helpers.LoggedInUser;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
@@ -104,6 +106,12 @@ public class Login extends AppCompatActivity
         dummyLinks4.add(new Tbl_IncidentLink(4, 2, 2, 3));
         dummyLinks4.add(new Tbl_IncidentLink(4, 1, 3, 4));
         Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), new Tbl_Incident("02-25-2016 19:05:45", "", "Burglary at Wright State", "3640 Colonel Glenn Hwy", "Fairborn, OH 45342", 39.7815, -84.0635983, dummyLinks4));
+
+        //templates
+        Tbl_Templates_Manager.current.Insert(db.getWritableDatabase(), new Tbl_Templates(1, "Template 1", "https://drive.google.com/uc?export=download&id=0B-fUjt0KYePTVkRxQjQ3bTFRNGs"));
+        Tbl_Templates_Manager.current.Insert(db.getWritableDatabase(), new Tbl_Templates(2, "Template 2", "https://drive.google.com/uc?export=download&id=0B-fUjt0KYePTUnJSMTc1MEgweVU"));
+        Tbl_Templates_Manager.current.Insert(db.getWritableDatabase(), new Tbl_Templates(3, "Template 3", "https://drive.google.com/uc?export=download&id=0B-fUjt0KYePTeE9xbGt4bkR5bEk"));
+        Tbl_Templates_Manager.current.Insert(db.getWritableDatabase(), new Tbl_Templates(4, "Template 4", "https://drive.google.com/uc?export=download&id=0B-fUjt0KYePTVjF6TTBNdm4wazg"));
 
         //submitted forms
     }

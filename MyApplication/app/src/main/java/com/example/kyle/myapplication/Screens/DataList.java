@@ -21,6 +21,10 @@ import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role_Manager;
+import com.example.kyle.myapplication.Database.SubmittedForms.Tbl_SubmittedForms;
+import com.example.kyle.myapplication.Database.SubmittedForms.Tbl_SubmittedForms_Manager;
+import com.example.kyle.myapplication.Database.Templates.Tbl_Templates;
+import com.example.kyle.myapplication.Database.Templates.Tbl_Templates_Manager;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
 
@@ -34,6 +38,7 @@ public class DataList extends AppCompatActivity
         View,
         Edit,
     }
+
     private Database_Manager db;
     private GridView gridView;
     private TextView lblNoData;
@@ -80,43 +85,30 @@ public class DataList extends AppCompatActivity
                 }
                 valueList = new ArrayList<Abstract_Table>(Tbl_Incident_Manager.current.Select(db.getReadableDatabase(), searchCriteria));
                 break;
+            case TEMPLATES:
+                valueList = new ArrayList<Abstract_Table>(Tbl_Templates_Manager.current.Select(db.getReadableDatabase()));
+                break;
             case SUBMITTEDFORMS:
                 //valueList = new ArrayList<Abstract_Table>(Tbl_SubmittedForms_Manager.current.Select(db.getReadableDatabase()));
                 break;
         }
-        if (inEditMode())
-        {
-            lblNoData.setText("No data to edit");
-            gridView.setOnItemClickListener(new OnItemClickListener()
-            {
-                public void onItemClick(AdapterView parent, View v, int position, long id)
-                {
-                    selectedRecord = valueList.get(position);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(DataList.this);
-                    builder.setMessage(selectedRecord.getDataGridPopupMessageValue());
-                    builder.setPositiveButton("Edit", dialogClickListener);
-                    builder.setNegativeButton("Cancel", null);
-                    builder.show();
-                }
-            });
 
-        }
-        else
+        String noDataMessage = inEditMode() ? "No data to edit" : "No data to delete";
+        lblNoData.setText(noDataMessage);
+        gridView.setOnItemClickListener(new OnItemClickListener()
         {
-            lblNoData.setText("No data to delete");
-            gridView.setOnItemClickListener(new OnItemClickListener()
+            public void onItemClick(AdapterView parent, View v, int position, long id)
             {
-                public void onItemClick(AdapterView parent, View v, int position, long id)
-                {
-                    selectedRecord = valueList.get(position);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(DataList.this);
-                    builder.setMessage(selectedRecord.getDataGridPopupMessageValue());
-                    builder.setPositiveButton("Delete", dialogClickListener);
-                    builder.setNegativeButton("Cancel", null);
-                    builder.show();
-                }
-            });
-        }
+                selectedRecord = valueList.get(position);
+                AlertDialog.Builder builder = new AlertDialog.Builder(DataList.this);
+                builder.setMessage(selectedRecord.getDataGridPopupMessageValue());
+                String editDelete = inEditMode() ? "Edit" : "Delete";
+                builder.setPositiveButton(editDelete, dialogClickListener);
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+            }
+        });
+
         gridView.setAdapter(new DataListGridAdapter(DataList.this, valueList));
 
         showHideNoDataLabel();
@@ -143,6 +135,9 @@ public class DataList extends AppCompatActivity
                             case INCIDENT:
                                 OpenScreens.OpenCreateIncidentScreen((Tbl_Incident) DataList.selectedRecord);
                                 break;
+                            case TEMPLATES:
+                                OpenScreens.OpenUploadTemplatesScreen((Tbl_Templates) DataList.selectedRecord);
+                                break;
                             case SUBMITTEDFORMS:
                                 break;
                         }
@@ -168,6 +163,9 @@ public class DataList extends AppCompatActivity
                                         break;
                                     case INCIDENT:
                                         Tbl_Incident_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Incident) selectedRecord);
+                                        break;
+                                    case TEMPLATES:
+                                        Tbl_Templates_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Templates) selectedRecord);
                                         break;
                                     case SUBMITTEDFORMS:
                                         //Tbl_SubmittedForms_Manager.current.Delete(db.getWritableDatabase(), (Tbl_SubmittedForms) selectedRecord);

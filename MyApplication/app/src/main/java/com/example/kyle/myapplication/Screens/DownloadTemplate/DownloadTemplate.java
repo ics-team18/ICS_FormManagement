@@ -1,4 +1,4 @@
-package com.example.kyle.myapplication.Screens.Template.Download;
+package com.example.kyle.myapplication.Screens.DownloadTemplate.Download;
 
 import android.app.Activity;
 import android.os.Bundle;

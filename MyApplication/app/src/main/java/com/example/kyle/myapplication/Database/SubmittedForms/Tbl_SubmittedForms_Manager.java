@@ -2,10 +2,16 @@ package com.example.kyle.myapplication.Database.SubmittedForms;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
+import com.example.kyle.myapplication.Database.Incident.Tbl_Incident;
 import com.example.kyle.myapplication.Database.Incident.Tbl_Incident_Manager;
+import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink;
+import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
+import com.example.kyle.myapplication.Database.Role.Tbl_Role;
+import com.example.kyle.myapplication.Database.Role.Tbl_Role_Manager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +25,32 @@ public class Tbl_SubmittedForms_Manager extends Abstract_Table_Manager<Tbl_Submi
 
     public enum Attributes
     {
-        FORMID,
+        SUBMITTEDFORMID,
         INCIDENTID,
         PERSONNELID,
         FORM,
+        DESCRIPTION,
         TIMESUBMITTED,
+    }
+
+    @Override
+    public List<Tbl_SubmittedForms> Select(SQLiteDatabase db, Tbl_SubmittedForms searchCriteria)
+    {
+        List<Tbl_SubmittedForms> submittedFormsList = super.Select(db, searchCriteria);
+        for (int i = 0; i < submittedFormsList.size(); i++)
+        {
+            Tbl_SubmittedForms submittedForm = submittedFormsList.get(i);
+
+            //get the personnel for this record
+            submittedForm.personnel = Tbl_Personnel_Manager.current.Select(db, new Tbl_Personnel(submittedForm.personnelID)).get(0);
+        }
+        return submittedFormsList;
     }
 
     @Override
     public String GetPrimaryKey()
     {
-        return Attributes.FORMID.name();
+        return Attributes.SUBMITTEDFORMID.name();
     }
 
     @Override
@@ -41,11 +62,12 @@ public class Tbl_SubmittedForms_Manager extends Abstract_Table_Manager<Tbl_Submi
     @Override
     public String GetCreateScript()
     {
-        return Attributes.FORMID.name() + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        return Attributes.SUBMITTEDFORMID.name() + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 Attributes.INCIDENTID.name() + " INTEGER, " +
                 Attributes.PERSONNELID.name() + " INTEGER, " +
-                Attributes.FORM.name() + " TEXT, " +
-                Attributes.TIMESUBMITTED.name() + " TEXT," +
+                Attributes.FORM.name() + " TEXT COLLATE NOCASE, " +
+                Attributes.DESCRIPTION.name() + " TEXT COLLATE NOCASE, " +
+                Attributes.TIMESUBMITTED.name() + " TEXT COLLATE NOCASE," +
                 "FOREIGN KEY(" + Attributes.INCIDENTID.name() + ") REFERENCES " + Tbl_Incident_Manager.current.GetTableName() + "(" + Tbl_Incident_Manager.Attributes.INCIDENTID.name() + ")," +
                 "FOREIGN KEY(" + Attributes.PERSONNELID.name() + ") REFERENCES " + Tbl_Personnel_Manager.current.GetTableName() + "(" + Tbl_Personnel_Manager.Attributes.PERSONNELID.name() + ")";
     }
@@ -54,9 +76,9 @@ public class Tbl_SubmittedForms_Manager extends Abstract_Table_Manager<Tbl_Submi
     public String GetSelectScript(Tbl_SubmittedForms searchCritera)
     {
         String whereClause = "";
-        if (searchCritera.formID > -1)
+        if (searchCritera.submittedFormID > -1)
         {
-            whereClause += Attributes.FORMID.name() + " = " + Long.toString(searchCritera.formID);
+            whereClause += Attributes.SUBMITTEDFORMID.name() + " = " + Long.toString(searchCritera.submittedFormID);
         }
         if (searchCritera.incidentID > -1)
         {
@@ -87,7 +109,7 @@ public class Tbl_SubmittedForms_Manager extends Abstract_Table_Manager<Tbl_Submi
         values.put(Attributes.TIMESUBMITTED.name(), record.timeSubmitted);
         if (isUpdate)
         {
-            values.put(Attributes.FORMID.name(), record.formID);
+            values.put(Attributes.SUBMITTEDFORMID.name(), record.submittedFormID);
         }
         return values;
     }
@@ -95,7 +117,7 @@ public class Tbl_SubmittedForms_Manager extends Abstract_Table_Manager<Tbl_Submi
     @Override
     public String GetPrimaryKeyValue(Tbl_SubmittedForms record)
     {
-        return Long.toString(record.formID);
+        return Long.toString(record.submittedFormID);
     }
 
     @Override
@@ -105,7 +127,7 @@ public class Tbl_SubmittedForms_Manager extends Abstract_Table_Manager<Tbl_Submi
         while (cursor.moveToNext())
         {
             Tbl_SubmittedForms record = new Tbl_SubmittedForms();
-            record.formID = cursor.getLong(Attributes.FORMID.ordinal());
+            record.submittedFormID = cursor.getLong(Attributes.SUBMITTEDFORMID.ordinal());
             record.incidentID = cursor.getLong(Attributes.INCIDENTID.ordinal());
             record.personnelID = cursor.getLong(Attributes.PERSONNELID.ordinal());
             record.form = cursor.getString(Attributes.FORM.ordinal());
