@@ -78,7 +78,14 @@ public class Manage_Data extends AppCompatActivity
         selectionDialog.show();
 
         TextView txtTable = (TextView) selectionDialog.findViewById(R.id.txtTable);
-        txtTable.setText(table.toString());
+        if (table == Abstract_Table_Manager.Table.SUBMITTEDFORMS)
+        {
+            txtTable.setText("Submitted Forms");
+        }
+        else
+        {
+            txtTable.setText(table.toString());
+        }
         Button btnCreate = (Button) selectionDialog.findViewById(R.id.btnCreate);
         Button btnEdit = (Button) selectionDialog.findViewById(R.id.btnEdit);
         Button btnDelete = (Button) selectionDialog.findViewById(R.id.btnDelete);
@@ -97,7 +104,7 @@ public class Manage_Data extends AppCompatActivity
                 switch (table)
                 {
                     case PERSONNEL:
-                        OpenScreens.OpenCreatePersonnelScreen(null,false);
+                        OpenScreens.OpenCreatePersonnelScreen(null, false);
                         break;
                     case ROLE:
                         OpenScreens.OpenCreateRoleScreen(null);
@@ -106,7 +113,7 @@ public class Manage_Data extends AppCompatActivity
                         break;
                     case TEMPLATES:
                         OpenScreens.OpenUploadTemplatesScreen(null);
-                    break;
+                        break;
                 }
                 selectionDialog.cancel();
             }

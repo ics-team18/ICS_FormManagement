@@ -76,7 +76,7 @@ public class OpenScreens extends Activity
 
     public static void OpenCreateRoleScreen(Tbl_Role toUpdate)
     {
-        //CreateEditRole.toUpdate = toUpdate;
+        CreateEditRole.toUpdate = toUpdate;
         context.startActivity(new Intent(context, CreateEditRole.class));
     }
 
