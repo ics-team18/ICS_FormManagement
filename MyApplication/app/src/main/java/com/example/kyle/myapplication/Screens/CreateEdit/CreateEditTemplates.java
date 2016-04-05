@@ -9,8 +9,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
-import com.example.kyle.myapplication.Database.Database_Manager;
+import com.example.kyle.myapplication.Database.DBOperation;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role_Manager;
 import com.example.kyle.myapplication.Database.Templates.Tbl_Templates;
@@ -25,8 +26,7 @@ import java.util.List;
 
 public class CreateEditTemplates extends AppCompatActivity
 {
-    private Database_Manager db;
-    private EditText txtDescription, txtTemplateURL;
+    private EditText txtDescription, txtFileName;
     private Spinner cboRole;
     public static Tbl_Templates toUpdate = null;
 
@@ -35,9 +35,8 @@ public class CreateEditTemplates extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createedit_templates);
-        db = new Database_Manager(this);
         txtDescription = (EditText) findViewById(R.id.txtDescription);
-        txtTemplateURL = (EditText) findViewById(R.id.txtTemplateURL);
+        txtFileName = (EditText) findViewById(R.id.txtFileName);
         cboRole = (Spinner) findViewById(R.id.cboRole);
         setSpinnerData();
         Button btnCreate = (Button) findViewById(R.id.btnCreate);
@@ -71,7 +70,7 @@ public class CreateEditTemplates extends AppCompatActivity
 
     private void setSpinnerData()
     {
-        List<Tbl_Role> roleList = Tbl_Role_Manager.current.Select(db.getReadableDatabase());
+        List<Tbl_Role> roleList = Tbl_Role_Manager.current.Select();
         Collections.sort(roleList, new Comparator<Tbl_Role>()
         {
             @Override
@@ -88,25 +87,31 @@ public class CreateEditTemplates extends AppCompatActivity
     {
         Tbl_Role role = (Tbl_Role) cboRole.getSelectedItem();
         String description = txtDescription.getText().toString();
-        String templateURL = txtTemplateURL.getText().toString();
-        Tbl_Templates record = new Tbl_Templates(role, description, templateURL);
+        String fileName = role.title + " - " + txtFileName.getText().toString();
+        Tbl_Templates record = new Tbl_Templates(role, description, fileName);
         String anyErrors = record.isValidRecord();
         if (anyErrors.isEmpty())
         {
             if (toUpdate != null)
             {
                 record.templatesID = toUpdate.templatesID;
+                record.sqlMode = Abstract_Table.SQLMode.UPDATE;
                 toUpdate = record;
-                Tbl_Templates_Manager.current.Update(db.getWritableDatabase(), toUpdate);
-                Toast.makeText(this, "Template Updated", Toast.LENGTH_LONG).show();
-                OpenScreens.OpenDataListScreen(DataList.Mode.Edit, Abstract_Table_Manager.Table.TEMPLATES);
-                finish();
+                DBOperation resultOperation = Tbl_Templates_Manager.current.RecordOperation(this, toUpdate, "Template Updated", "Unable to Update Template");
+                if (resultOperation != null && resultOperation.Success())
+                {
+                    OpenScreens.OpenDataListScreen(DataList.Mode.Edit, Abstract_Table_Manager.Table.TEMPLATES);
+                    finish();
+                }
             }
             else
             {
-                Tbl_Templates_Manager.current.Insert(db.getWritableDatabase(), record);
-                Toast.makeText(this, "Template Added", Toast.LENGTH_LONG).show();
-                clear();
+                record.sqlMode = Abstract_Table.SQLMode.INSERT;
+                DBOperation resultOperation = Tbl_Templates_Manager.current.RecordOperation(this, record, "Template Added", "Unable to Add Template");
+                if (resultOperation != null && resultOperation.Success())
+                {
+                    clear();
+                }
             }
         }
         else
@@ -120,7 +125,7 @@ public class CreateEditTemplates extends AppCompatActivity
         if (toUpdate != null)
         {
             txtDescription.setText(toUpdate.description);
-            txtTemplateURL.setText(toUpdate.templateURL);
+            txtFileName.setText(toUpdate.fileName);
             for (int i = 0; i < cboRole.getCount(); i++)
             {
                 String value = cboRole.getItemAtPosition(i).toString();
@@ -137,7 +142,7 @@ public class CreateEditTemplates extends AppCompatActivity
             cboRole.setEnabled(true);
             cboRole.setSelection(0);
             txtDescription.setText("");
-            txtTemplateURL.setText("");
+            txtFileName.setText("");
         }
     }
 }

@@ -14,15 +14,13 @@ import android.widget.Toast;
 import com.example.kyle.myapplication.CustomControls.DataListGridAdapter;
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
-import com.example.kyle.myapplication.Database.Database_Manager;
+import com.example.kyle.myapplication.Database.DBOperation;
 import com.example.kyle.myapplication.Database.Incident.Tbl_Incident;
 import com.example.kyle.myapplication.Database.Incident.Tbl_Incident_Manager;
 import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role_Manager;
-import com.example.kyle.myapplication.Database.SubmittedForms.Tbl_SubmittedForms;
-import com.example.kyle.myapplication.Database.SubmittedForms.Tbl_SubmittedForms_Manager;
 import com.example.kyle.myapplication.Database.Templates.Tbl_Templates;
 import com.example.kyle.myapplication.Database.Templates.Tbl_Templates_Manager;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
@@ -39,7 +37,6 @@ public class DataList extends AppCompatActivity
         Edit,
     }
 
-    private Database_Manager db;
     private GridView gridView;
     private TextView lblNoData;
     private List<Abstract_Table> valueList;
@@ -52,7 +49,6 @@ public class DataList extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_list);
-        db = new Database_Manager(this);
         gridView = (GridView) findViewById(R.id.gridView);
         lblNoData = (TextView) findViewById(R.id.lblNoData);
         showGrid();
@@ -72,21 +68,21 @@ public class DataList extends AppCompatActivity
                 Toast.makeText(DataList.this, "Programmer Error: You need to set the Specific table variable", Toast.LENGTH_LONG).show();
                 break;
             case PERSONNEL:
-                valueList = new ArrayList<Abstract_Table>(Tbl_Personnel_Manager.current.Select(db.getReadableDatabase()));
+                valueList = new ArrayList<Abstract_Table>(Tbl_Personnel_Manager.current.Select());
                 break;
             case ROLE:
-                valueList = new ArrayList<Abstract_Table>(Tbl_Role_Manager.current.Select(db.getReadableDatabase()));
+                valueList = new ArrayList<Abstract_Table>(Tbl_Role_Manager.current.Select());
                 break;
             case INCIDENT:
                 Tbl_Incident searchCriteria = new Tbl_Incident();
                 if (inEditMode())
                 {
-                    searchCriteria.endTime = "= ''";
+                    searchCriteria.endTime = "''";
                 }
-                valueList = new ArrayList<Abstract_Table>(Tbl_Incident_Manager.current.Select(db.getReadableDatabase(), searchCriteria));
+                valueList = new ArrayList<Abstract_Table>(Tbl_Incident_Manager.current.Select(searchCriteria));
                 break;
             case TEMPLATES:
-                valueList = new ArrayList<Abstract_Table>(Tbl_Templates_Manager.current.Select(db.getReadableDatabase()));
+                valueList = new ArrayList<Abstract_Table>(Tbl_Templates_Manager.current.Select());
                 break;
             case SUBMITTEDFORMS:
                 //valueList = new ArrayList<Abstract_Table>(Tbl_SubmittedForms_Manager.current.Select(db.getReadableDatabase()));
@@ -110,7 +106,6 @@ public class DataList extends AppCompatActivity
         });
 
         gridView.setAdapter(new DataListGridAdapter(DataList.this, valueList));
-
         showHideNoDataLabel();
     }
 
@@ -136,7 +131,7 @@ public class DataList extends AppCompatActivity
                                 OpenScreens.OpenCreateIncidentScreen((Tbl_Incident) DataList.selectedRecord);
                                 break;
                             case TEMPLATES:
-                                OpenScreens.OpenUploadTemplatesScreen((Tbl_Templates) DataList.selectedRecord);
+                                OpenScreens.OpenUploadTemplateScreen((Tbl_Templates) DataList.selectedRecord);
                                 break;
                             case SUBMITTEDFORMS:
                                 break;
@@ -153,28 +148,34 @@ public class DataList extends AppCompatActivity
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
+                                selectedRecord.sqlMode = Abstract_Table.SQLMode.DELETE;
+                                String successMessage = "Record successfully deleted";
+                                String failMessage = "Unable to Delete Record";
+                                DBOperation resultOperation = null;
                                 switch (SpecificTable)
                                 {
                                     case PERSONNEL:
-                                        Tbl_Personnel_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Personnel) selectedRecord);
+                                        resultOperation = Tbl_Personnel_Manager.current.RecordOperation(DataList.this, (Tbl_Personnel) selectedRecord, successMessage, failMessage);
                                         break;
                                     case ROLE:
-                                        Tbl_Role_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Role) selectedRecord);
+                                        resultOperation = Tbl_Role_Manager.current.RecordOperation(DataList.this, (Tbl_Role) selectedRecord, successMessage, failMessage);
                                         break;
                                     case INCIDENT:
-                                        Tbl_Incident_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Incident) selectedRecord);
+                                        resultOperation = Tbl_Incident_Manager.current.RecordOperation(DataList.this, (Tbl_Incident) selectedRecord, successMessage, failMessage);
                                         break;
                                     case TEMPLATES:
-                                        Tbl_Templates_Manager.current.Delete(db.getWritableDatabase(), (Tbl_Templates) selectedRecord);
+                                        resultOperation = Tbl_Templates_Manager.current.RecordOperation(DataList.this, (Tbl_Templates) selectedRecord, successMessage, failMessage);
                                         break;
                                     case SUBMITTEDFORMS:
-                                        //Tbl_SubmittedForms_Manager.current.Delete(db.getWritableDatabase(), (Tbl_SubmittedForms) selectedRecord);
+                                        //resultOperation = Tbl_SubmittedForms_Manager.current.RecordOperation(DataList.this, (Tbl_SubmittedForms)  selectedRecord, successMessage, failMessage);
                                         break;
                                 }
-                                valueList.remove(selectedRecord);
-                                gridView.invalidateViews();
-                                Toast.makeText(DataList.this, "Record successfully deleted", Toast.LENGTH_LONG).show();
-                                showHideNoDataLabel();
+                                if (resultOperation != null && resultOperation.Success())
+                                {
+                                    valueList.remove(selectedRecord);
+                                    gridView.invalidateViews();
+                                    showHideNoDataLabel();
+                                }
                             }
                         });
                         builder.show();

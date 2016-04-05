@@ -11,7 +11,7 @@ public class Tbl_Templates extends Abstract_Table
     public long templatesID = -1;
     public long roleID = -1;
     public String description = "";
-    public String templateURL = "";
+    public String fileName = "";
     public Tbl_Role role = null;
 
     public Tbl_Templates()
@@ -23,16 +23,16 @@ public class Tbl_Templates extends Abstract_Table
         this.templatesID = templatesID;
     }
 
-    public Tbl_Templates(long roleID, String description, String templateURL)
+    public Tbl_Templates(long roleID, String description, String fileName)
     {
         this.roleID = roleID;
         this.description = description;
-        this.templateURL = templateURL;
+        this.fileName = fileName;
     }
 
-    public Tbl_Templates(Tbl_Role role, String description, String templateURL)
+    public Tbl_Templates(Tbl_Role role, String description, String fileName)
     {
-        this(role.roleID, description, templateURL);
+        this(role.roleID, description, fileName);
         this.role = role;
     }
 
@@ -49,9 +49,9 @@ public class Tbl_Templates extends Abstract_Table
         {
             anyErrors += "\nDescription is a required field";
         }
-        if (templateURL.isEmpty())
+        if (fileName.isEmpty())
         {
-            anyErrors += "\nTemplate URL is a required field";
+            anyErrors += "\nFile Name is a required field";
         }
         if (!anyErrors.isEmpty())
         {
@@ -73,6 +73,12 @@ public class Tbl_Templates extends Abstract_Table
         return "ID: " + Long.toString(this.templatesID) + "\n" +
                 "Role: " + this.role.title + "\n" +
                 "Description: " + this.description + "\n" +
-                "Template URL: " + this.templateURL;
+                "File Name: " + this.fileName;
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.description;
     }
 }

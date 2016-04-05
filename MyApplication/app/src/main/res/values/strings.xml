@@ -8,37 +8,6 @@
 
     // Below values are for Download Template Screen
     <string name="titleDownloadTemplate">Download Form Template</string>
-    <string name="label_org">"Select organization</string>
-    <string name="label_role">"Select ICS role</string>
-    <string name="label_form">"Select ICS form</string>
-
-    <string name="role_prompt">Choose a role</string>
-    <string-array name="role_arrays">
-        <item>Incident Commander</item>
-        <item>Director</item>
-        <item>Document Manager</item>
-        <item>Personnel Tracker</item>
-    </string-array>
-
-    <string name="org_prompt">Choose an organization</string>
-    <string-array name="org_arrays">
-        <item>Fire Dept</item>
-        <item>Police Dept</item>
-        <item>Emergency Response</item>
-        <item>Environmental</item>
-        <item>Personnel</item>
-        <item>Management</item>
-    </string-array>
-
-    <string name="form_prompt">Choose a form</string>
-    <string-array name="form_arrays">
-        <item>ICS Form 201</item>
-        <item>ICS Form 202</item>
-        <item>ICS Form 203</item>
-        <item>ICS Form 204</item>
-        <item>ICS Form 205</item>
-        <item>ICS Form 206</item>
-    </string-array>
 
     <string name="title_activity_upload_template">UploadTemplate</string>
 

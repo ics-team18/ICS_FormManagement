@@ -33,19 +33,17 @@
             android:id="@+id/cboRole"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/role_arrays"
-            android:prompt="@string/role_prompt"
             android:spinnerMode="dialog"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Template URL"
-            android:id="@+id/lblTemplateURL"
+            android:text="File Name"
+            android:id="@+id/lblFileName"
             android:layout_marginTop="40dp"/>
 
         <EditText
-            android:id="@+id/txtTemplateURL"
+            android:id="@+id/txtFileName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"

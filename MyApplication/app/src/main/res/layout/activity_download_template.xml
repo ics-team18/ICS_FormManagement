@@ -14,76 +14,58 @@
         android:text="@string/titleDownloadTemplate"
         android:textSize="25dp"/>
 
-    <LinearLayout
-        android:id="@+id/orgSpinnerLayout"
+
+    <TextView
+        android:id="@+id/lblRole"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="vertical">
+        android:text="Select a Role"
+        android:layout_marginTop="10dp"/>
 
-        <TextView
-            android:id="@+id/orgSpinnerLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/label_org"/>
+    <Spinner
+        android:id="@+id/cboRole"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dialog"/>
 
-        <Spinner
-            android:id="@+id/org_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/org_arrays"
-            android:prompt="@string/org_prompt"
-            android:spinnerMode="dialog"/>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/roleSpinnerLayout"
+    <TextView
+        android:id="@+id/lblTemplate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="vertical">
+        android:text="Select a Template"
+        android:layout_marginTop="10dp"/>
 
-        <TextView
-            android:id="@+id/roleSpinnerLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/label_role"/>
+    <Spinner
+        android:id="@+id/cboTemplateDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dialog"/>
 
-        <Spinner
-            android:id="@+id/role_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/role_arrays"
-            android:prompt="@string/role_prompt"
-            android:spinnerMode="dialog"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/formSpinnerLayout"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="vertical">
+        android:text="File Name"
+        android:id="@+id/textView3"
+        android:layout_marginTop="10dp"/>
 
-        <TextView
-            android:id="@+id/formSpinnerLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/label_form"/>
+    <EditText
+        android:id="@+id/txtFileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:singleLine="true"/>
 
-        <Spinner
-            android:id="@+id/form_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/form_arrays"
-            android:prompt="@string/form_prompt"
-            android:spinnerMode="dialog"/>
-    </LinearLayout>
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Clear"
+        android:layout_gravity="center_horizontal"/>
 
     <Button
         android:id="@+id/btnDownload"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Download Template"/>

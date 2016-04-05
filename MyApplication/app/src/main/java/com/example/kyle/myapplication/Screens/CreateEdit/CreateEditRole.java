@@ -7,8 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
-import com.example.kyle.myapplication.Database.Database_Manager;
+import com.example.kyle.myapplication.Database.DBOperation;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role_Manager;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
@@ -17,7 +18,6 @@ import com.example.kyle.myapplication.Screens.DataList;
 
 public class CreateEditRole extends AppCompatActivity
 {
-    private Database_Manager db;
     private EditText txtRoleTitle;
     public static Tbl_Role toUpdate = null;
 
@@ -26,7 +26,6 @@ public class CreateEditRole extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createedit_role);
-        db = new Database_Manager(this);
         txtRoleTitle = (EditText) findViewById(R.id.txtRoleTitle);
 
         Button btnCreate = (Button) findViewById(R.id.btnCreate);
@@ -68,17 +67,23 @@ public class CreateEditRole extends AppCompatActivity
             if (toUpdate != null)
             {
                 record.roleID = toUpdate.roleID;
+                record.sqlMode = Abstract_Table.SQLMode.UPDATE;
                 toUpdate = record;
-                Tbl_Role_Manager.current.Update(db.getWritableDatabase(), toUpdate);
-                Toast.makeText(this, "Role Updated", Toast.LENGTH_LONG).show();
-                OpenScreens.OpenDataListScreen(DataList.Mode.Edit, Abstract_Table_Manager.Table.ROLE);
-                finish();
+                DBOperation resultOperation = Tbl_Role_Manager.current.RecordOperation(this, toUpdate, "Role Updated", "Unable to Update Role");
+                if (resultOperation != null && resultOperation.Success())
+                {
+                    OpenScreens.OpenDataListScreen(DataList.Mode.Edit, Abstract_Table_Manager.Table.ROLE);
+                    finish();
+                }
             }
             else
             {
-                Tbl_Role_Manager.current.Insert(db.getWritableDatabase(), record);
-                Toast.makeText(this, "Role Added", Toast.LENGTH_LONG).show();
-                clear();
+                record.sqlMode = Abstract_Table.SQLMode.INSERT;
+                DBOperation resultOperation = Tbl_Role_Manager.current.RecordOperation(this, record, "Role Added", "Unable to Add Role");
+                if (resultOperation != null && resultOperation.Success())
+                {
+                    clear();
+                }
             }
         }
         else

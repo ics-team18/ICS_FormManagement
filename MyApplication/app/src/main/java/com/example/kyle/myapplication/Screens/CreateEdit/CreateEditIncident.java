@@ -19,8 +19,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
-import com.example.kyle.myapplication.Database.Database_Manager;
+import com.example.kyle.myapplication.Database.DBOperation;
 import com.example.kyle.myapplication.Database.Incident.Tbl_Incident;
 import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink;
 import com.example.kyle.myapplication.Database.Incident.Tbl_Incident_Manager;
@@ -41,7 +42,6 @@ import java.util.Locale;
 
 public class CreateEditIncident extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
-    private Database_Manager db;
     private TextView lblIncidentID, lblDate;
     private EditText txtDescription, txtAddress, txtCitySTZip, txtLatitude, txtLongitude;
     public static List<Tbl_IncidentLink> incidentLinks = new ArrayList<>();
@@ -55,7 +55,6 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createedit_incident);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        db = new Database_Manager(this);
         lblIncidentID = (TextView) findViewById(R.id.lblIncidentID);
         lblDate = (TextView) findViewById(R.id.lblDate);
         txtDescription = (EditText) findViewById(R.id.txtDescription);
@@ -167,8 +166,8 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
     {
         String formattedDate = getCurrentDateTime();
         lblDate.setText(formattedDate);
-        int nextIncidentID = Tbl_Incident_Manager.current.GetNextID(db.getReadableDatabase());
-        lblIncidentID.setText(Integer.toString(nextIncidentID));
+        long nextIncidentID = Tbl_Incident_Manager.current.GetNextID();
+        lblIncidentID.setText(Long.toString(nextIncidentID));
     }
 
     protected void onStart()
@@ -233,8 +232,8 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
             txtDescription.setText(toUpdate.description);
             txtAddress.setText(toUpdate.address);
             txtCitySTZip.setText(toUpdate.citySTZip);
-            txtLatitude.setText(Double.toString(toUpdate.latitude));
-            txtLongitude.setText(Double.toString(toUpdate.longitude));
+            txtLatitude.setText(toUpdate.latitude);
+            txtLongitude.setText(toUpdate.longitude);
             incidentLinks = new ArrayList<Tbl_IncidentLink>(toUpdate.incidentLinks.size());
             for (Tbl_IncidentLink element : toUpdate.incidentLinks)
             {
@@ -259,18 +258,8 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
         String description = txtDescription.getText().toString();
         String address = txtAddress.getText().toString();
         String citySTZip = txtCitySTZip.getText().toString();
-        double latitude = 0.0;
-        double longitude = 0.0;
-        String latitudeStr = txtLatitude.getText().toString();
-        String longitudeStr = txtLongitude.getText().toString();
-        if (!latitudeStr.isEmpty())
-        {
-            latitude = Double.parseDouble(latitudeStr);
-        }
-        if (!longitudeStr.isEmpty())
-        {
-            longitude = Double.parseDouble(longitudeStr);
-        }
+        String latitude = txtLatitude.getText().toString();
+        String longitude = txtLongitude.getText().toString();
         Tbl_Incident record = new Tbl_Incident(startDate, endDate, description, address, citySTZip, latitude, longitude, incidentLinks);
         String anyErrors = record.isValidRecord();
         if (anyErrors.isEmpty())
@@ -278,18 +267,25 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
             if (toUpdate != null)
             {
                 record.incidentID = toUpdate.incidentID;
+                record.sqlMode = Abstract_Table.SQLMode.UPDATE;
                 toUpdate = record;
-                Tbl_Incident_Manager.current.Update(db.getWritableDatabase(), toUpdate);
-                String message = closeIncident ? "Incident Closed" : "Incident Updated";
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-                OpenScreens.OpenDataListScreen(DataList.Mode.Edit, Abstract_Table_Manager.Table.INCIDENT);
-                finish();
+                String successMessage = closeIncident ? "Incident Closed" : "Incident Updated";
+                String failMessage = closeIncident ? "Unable to Close Incident" : "Unable to Update Incident";
+                DBOperation resultOperation = Tbl_Incident_Manager.current.RecordOperation(this, toUpdate, successMessage, failMessage);
+                if (resultOperation != null && resultOperation.Success())
+                {
+                    OpenScreens.OpenDataListScreen(DataList.Mode.Edit, Abstract_Table_Manager.Table.INCIDENT);
+                    finish();
+                }
             }
             else
             {
-                Tbl_Incident_Manager.current.Insert(db.getWritableDatabase(), record);
-                Toast.makeText(this, "Incident Created", Toast.LENGTH_LONG).show();
-                clear();
+                record.sqlMode = Abstract_Table.SQLMode.INSERT;
+                DBOperation resultOperation = Tbl_Incident_Manager.current.RecordOperation(this, record, "Incident Created", "Unable to Create Incident");
+                if (resultOperation != null && resultOperation.Success())
+                {
+                    clear();
+                }
             }
         }
         else

@@ -112,7 +112,7 @@ public class Manage_Data extends AppCompatActivity
                     case SUBMITTEDFORMS:
                         break;
                     case TEMPLATES:
-                        OpenScreens.OpenUploadTemplatesScreen(null);
+                        OpenScreens.OpenUploadTemplateScreen(null);
                         break;
                 }
                 selectionDialog.cancel();

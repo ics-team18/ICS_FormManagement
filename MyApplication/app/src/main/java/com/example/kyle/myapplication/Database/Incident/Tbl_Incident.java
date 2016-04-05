@@ -19,8 +19,8 @@ public class Tbl_Incident extends Abstract_Table
     public String description = "";
     public String address = "";
     public String citySTZip = "";
-    public double latitude = 0.0;
-    public double longitude = 0.0;
+    public String latitude = "";
+    public String longitude = "";
     public List<Tbl_IncidentLink> incidentLinks;
 
     public Tbl_Incident()
@@ -32,7 +32,7 @@ public class Tbl_Incident extends Abstract_Table
         this.incidentID = incidentID;
     }
 
-    public Tbl_Incident(String startTime, String endTime, String description, String address, String citySTZip, double latitude, double longitude, List<Tbl_IncidentLink> incidentLinks)
+    public Tbl_Incident(String startTime, String endTime, String description, String address, String citySTZip, String latitude, String longitude, List<Tbl_IncidentLink> incidentLinks)
     {
         this.startTime = startTime;
         this.endTime = endTime;
@@ -61,11 +61,11 @@ public class Tbl_Incident extends Abstract_Table
         {
             anyErrors += "\nCity, ST Zip is a required field";
         }
-        if (latitude == 0.0)
+        if (latitude.isEmpty())
         {
             anyErrors += "\nLatitude is a required field";
         }
-        if (longitude == 0.0)
+        if (longitude.isEmpty())
         {
             anyErrors += "\nLongitude is a required field";
         }

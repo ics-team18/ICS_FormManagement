@@ -3,6 +3,7 @@ package com.example.kyle.myapplication.Database.IncidentLink;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Pair;
 
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Database.Incident.Tbl_Incident_Manager;
@@ -10,6 +11,11 @@ import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role_Manager;
+import com.example.kyle.myapplication.Database.SubmittedForms.Tbl_SubmittedForms;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,23 +37,6 @@ public class Tbl_IncidentLink_Manager extends Abstract_Table_Manager<Tbl_Inciden
     }
 
     @Override
-    public List<Tbl_IncidentLink> Select(SQLiteDatabase db, Tbl_IncidentLink searchCriteria)
-    {
-        List<Tbl_IncidentLink> incidentLinkList = super.Select(db, searchCriteria);
-        for (int i = 0; i < incidentLinkList.size(); i++)
-        {
-            Tbl_IncidentLink incidentLink = incidentLinkList.get(i);
-
-            //get the personnel for this link record
-            incidentLink.personnel = Tbl_Personnel_Manager.current.Select(db, new Tbl_Personnel(incidentLink.personnelID)).get(0);
-
-            //get the role for this link record
-            incidentLink.role = Tbl_Role_Manager.current.Select(db, new Tbl_Role(incidentLink.roleID)).get(0);
-        }
-        return incidentLinkList;
-    }
-
-    @Override
     public String GetPrimaryKey()
     {
         return Attributes.INCIDENTLINKID.name();
@@ -60,58 +49,28 @@ public class Tbl_IncidentLink_Manager extends Abstract_Table_Manager<Tbl_Inciden
     }
 
     @Override
-    public String GetCreateScript()
+    protected String GetCreateScript()
     {
-        return Attributes.INCIDENTLINKID.name() + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                Attributes.INCIDENTID.name() + " INTEGER, " +
-                Attributes.PERSONNELID.name() + " INTEGER, " +
-                Attributes.ROLEID.name() + " INTEGER, " +
-                Attributes.RANKING.name() + " INTEGER, " +
-                "FOREIGN KEY(" + Attributes.INCIDENTID.name() + ") REFERENCES " + Tbl_Incident_Manager.current.GetTableName() + "(" + Tbl_Incident_Manager.Attributes.INCIDENTID.name() + ")," +
-                "FOREIGN KEY(" + Attributes.PERSONNELID.name() + ") REFERENCES " + Tbl_Personnel_Manager.current.GetTableName() + "(" + Tbl_Personnel_Manager.Attributes.PERSONNELID.name() + ")," +
-                "FOREIGN KEY(" + Attributes.ROLEID.name() + ") REFERENCES " + Tbl_Role_Manager.current.GetTableName() + "(" + Tbl_Role_Manager.Attributes.ROLEID.name() + ")";
+        return Attributes.INCIDENTLINKID.name() + " INT(11) NOT NULL AUTO_INCREMENT,\n" +
+                Attributes.INCIDENTID.name() + " INT(11) NOT NULL,\n" +
+                Attributes.PERSONNELID.name() + " INT(11) NOT NULL,\n" +
+                Attributes.ROLEID.name() + " INT(11) NOT NULL,\n" +
+                Attributes.RANKING.name() + " INT(11) NOT NULL,\n" +
+                "PRIMARY KEY (" + Attributes.INCIDENTLINKID.name() + "),\n" +
+                "FOREIGN KEY(" + Attributes.INCIDENTID.name() + ") REFERENCES " + Tbl_Incident_Manager.current.GetTableName() + "(" + Tbl_Incident_Manager.Attributes.INCIDENTID.name() + "),\n" +
+                "FOREIGN KEY(" + Attributes.PERSONNELID.name() + ") REFERENCES " + Tbl_Personnel_Manager.current.GetTableName() + "(" + Tbl_Personnel_Manager.Attributes.PERSONNELID.name() + "),\n" +
+                "FOREIGN KEY(" + Attributes.ROLEID.name() + ") REFERENCES " + Tbl_Role_Manager.current.GetTableName() + "(" + Tbl_Role_Manager.Attributes.ROLEID.name() + ")\n";
     }
 
     @Override
-    public String GetSelectScript(Tbl_IncidentLink searchCritera)
+    protected List<Pair<String, String>> GetContentValues(Tbl_IncidentLink record)
     {
-        String whereClause = "";
-        if (searchCritera.incidentLinkID > -1)
-        {
-            whereClause += Attributes.INCIDENTLINKID.name() + " = " + Long.toString(searchCritera.incidentLinkID);
-        }
-        if (searchCritera.incidentID > -1)
-        {
-            whereClause += Attributes.INCIDENTID.name() + " = " + Long.toString(searchCritera.incidentID);
-        }
-        if (searchCritera.personnelID > -1)
-        {
-            whereClause += Attributes.PERSONNELID.name() + " = " + Long.toString(searchCritera.personnelID);
-        }
-        if (searchCritera.roleID > -1)
-        {
-            whereClause += Attributes.ROLEID.name() + " = " + Long.toString(searchCritera.roleID);
-        }
-        if (searchCritera.ranking > -1)
-        {
-            whereClause += Attributes.RANKING.name() + " = " + searchCritera.ranking;
-        }
-
-        return whereClause;
-    }
-
-    @Override
-    public ContentValues GetContentValues(Tbl_IncidentLink record, boolean isUpdate)
-    {
-        ContentValues values = new ContentValues();
-        values.put(Attributes.INCIDENTID.name(), record.incidentID);
-        values.put(Attributes.PERSONNELID.name(), record.personnelID);
-        values.put(Attributes.ROLEID.name(), record.roleID);
-        values.put(Attributes.RANKING.name(), record.ranking);
-        if (isUpdate)
-        {
-            values.put(Attributes.INCIDENTLINKID.name(), record.incidentLinkID);
-        }
+        List<Pair<String, String>> values = new ArrayList<Pair<String, String>>();
+        values.add(new Pair<String, String>(Attributes.INCIDENTLINKID.name(), Long.toString(record.incidentLinkID)));
+        values.add(new Pair<String, String>(Attributes.INCIDENTID.name(), Long.toString(record.incidentID)));
+        values.add(new Pair<String, String>(Attributes.PERSONNELID.name(), Long.toString(record.personnelID)));
+        values.add(new Pair<String, String>(Attributes.ROLEID.name(), Long.toString(record.roleID)));
+        values.add(new Pair<String, String>(Attributes.RANKING.name(), Long.toString(record.ranking)));
         return values;
     }
 
@@ -122,18 +81,29 @@ public class Tbl_IncidentLink_Manager extends Abstract_Table_Manager<Tbl_Inciden
     }
 
     @Override
-    public List<Tbl_IncidentLink> GetList(Cursor cursor)
+    public List<Tbl_IncidentLink> GetList(List<JSONObject> JSONList)
     {
         List<Tbl_IncidentLink> resultList = new ArrayList<Tbl_IncidentLink>();
-        while (cursor.moveToNext())
+        try
         {
-            Tbl_IncidentLink record = new Tbl_IncidentLink();
-            record.incidentLinkID = cursor.getLong(Attributes.INCIDENTLINKID.ordinal());
-            record.incidentID = cursor.getLong(Attributes.INCIDENTID.ordinal());
-            record.personnelID = cursor.getLong(Attributes.PERSONNELID.ordinal());
-            record.roleID = cursor.getLong(Attributes.ROLEID.ordinal());
-            record.ranking = cursor.getInt(Attributes.RANKING.ordinal());
-            resultList.add(record);
+            for (JSONObject json : JSONList)
+            {
+                Tbl_IncidentLink record = new Tbl_IncidentLink();
+                record.incidentLinkID = json.getLong(Attributes.INCIDENTLINKID.name());
+                record.incidentID = json.getLong(Attributes.INCIDENTID.name());
+                record.personnelID = json.getLong(Attributes.PERSONNELID.name());
+                record.roleID = json.getLong(Attributes.ROLEID.name());
+                record.ranking = json.getInt(Attributes.RANKING.name());
+                //get the personnel for this link record
+                record.personnel = Tbl_Personnel_Manager.current.Select(new Tbl_Personnel(record.personnelID)).get(0);
+                //get the role for this link record
+                record.role = Tbl_Role_Manager.current.Select(new Tbl_Role(record.roleID)).get(0);
+                resultList.add(record);
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
         }
         return resultList;
     }

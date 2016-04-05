@@ -1,9 +1,13 @@
 package com.example.kyle.myapplication.Database.Role;
 
-import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Pair;
 
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,36 +38,20 @@ public class Tbl_Role_Manager extends Abstract_Table_Manager<Tbl_Role>
     }
 
     @Override
-    public String GetCreateScript()
+    protected String GetCreateScript()
     {
-        return Attributes.ROLEID.name() + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                Attributes.TITLE.name() + " TEXT";
+        return Attributes.ROLEID.name() + " INT(11) NOT NULL AUTO_INCREMENT,\n" +
+                Attributes.TITLE.name() + " VARCHAR(30) NOT NULL,\n" +
+                "PRIMARY KEY (" + Attributes.ROLEID.name() + "),\n" +
+                "UNIQUE KEY " + Attributes.TITLE.name() + "(" + Attributes.TITLE.name() + ")\n";
     }
 
     @Override
-    public String GetSelectScript(Tbl_Role searchCritera)
+    protected List<Pair<String, String>> GetContentValues(Tbl_Role record)
     {
-        String whereClause = "";
-        if (searchCritera.roleID > -1)
-        {
-            whereClause += Attributes.ROLEID.name() + " = " + Long.toString(searchCritera.roleID);
-        }
-        if (!searchCritera.title.isEmpty())
-        {
-            whereClause += Attributes.TITLE.name() + " = " + searchCritera.title;
-        }
-        return whereClause;
-    }
-
-    @Override
-    public ContentValues GetContentValues(Tbl_Role record, boolean isUpdate)
-    {
-        ContentValues values = new ContentValues();
-        values.put(Attributes.TITLE.name(), record.title);
-        if (isUpdate)
-        {
-            values.put(Attributes.ROLEID.name(), record.roleID);
-        }
+        List<Pair<String, String>> values = new ArrayList<Pair<String, String>>();
+        values.add(new Pair<String, String>(Attributes.ROLEID.name(), Long.toString(record.roleID)));
+        values.add(new Pair<String, String>(Attributes.TITLE.name(), record.title));
         return values;
     }
 
@@ -74,15 +62,22 @@ public class Tbl_Role_Manager extends Abstract_Table_Manager<Tbl_Role>
     }
 
     @Override
-    public List<Tbl_Role> GetList(Cursor cursor)
+    public List<Tbl_Role> GetList(List<JSONObject> JSONList)
     {
         List<Tbl_Role> resultList = new ArrayList<Tbl_Role>();
-        while (cursor.moveToNext())
+        try
         {
-            Tbl_Role record = new Tbl_Role();
-            record.roleID = cursor.getLong(Attributes.ROLEID.ordinal());
-            record.title = cursor.getString(Attributes.TITLE.ordinal());
-            resultList.add(record);
+            for (JSONObject json : JSONList)
+            {
+                Tbl_Role record = new Tbl_Role();
+                record.roleID = json.getLong(Attributes.ROLEID.name());
+                record.title = json.getString(Attributes.TITLE.name());
+                resultList.add(record);
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
         }
         return resultList;
     }

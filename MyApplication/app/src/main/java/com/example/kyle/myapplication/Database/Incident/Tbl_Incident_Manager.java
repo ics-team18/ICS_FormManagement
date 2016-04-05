@@ -1,12 +1,21 @@
 package com.example.kyle.myapplication.Database.Incident;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Pair;
 
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
+import com.example.kyle.myapplication.Database.DBOperation;
 import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink;
 import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink_Manager;
+import com.example.kyle.myapplication.Database.Role.Tbl_Role;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,74 +40,79 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
     }
 
     @Override
-    public List<Tbl_Incident> Select(SQLiteDatabase db, Tbl_Incident searchCriteria)
+    public DBOperation RecordOperation(Context context, Tbl_Incident record, String SuccessMessage, String FailMessage)
     {
-        List<Tbl_Incident> incidentList = super.Select(db, searchCriteria);
-        for (int i = 0; i < incidentList.size(); i++)
+        DBOperation operation = null;
+        switch (record.sqlMode)
         {
-            Tbl_Incident incident = incidentList.get(i);
-            //get the incident links for this record
-            Tbl_IncidentLink incidentLink = new Tbl_IncidentLink();
-            incidentLink.incidentID = incident.incidentID;
-            incident.incidentLinks = Tbl_IncidentLink_Manager.current.Select(db, incidentLink);
+            case INSERT:
+                operation = super.RecordOperation(context, record, SuccessMessage, FailMessage);
+                if (operation.ResultID != -1)
+                {
+                    for (int i = 0; i < record.incidentLinks.size(); i++)
+                    {
+                        Tbl_IncidentLink incidentLink = record.incidentLinks.get(i);
+                        incidentLink.incidentID = operation.ResultID;
+                        incidentLink.sqlMode = record.sqlMode;
+                        DBOperation resultOperation = Tbl_IncidentLink_Manager.current.RecordOperation(incidentLink);
+                        if (resultOperation.ResultID == -1)
+                        {
+                            break;
+                        }
+                    }
+                }
+                break;
+            case UPDATE:
+                operation = super.RecordOperation(context, record, SuccessMessage, FailMessage);
+                for (int i = 0; i < record.incidentLinks.size(); i++)
+                {
+                    Tbl_IncidentLink incidentLink = record.incidentLinks.get(i);
+                    if (incidentLink.sqlMode == Abstract_Table.SQLMode.INSERT)
+                    {
+                        incidentLink.incidentID = record.incidentID;
+                    }
+                    Tbl_IncidentLink_Manager.current.RecordOperation(incidentLink);
+                }
+                break;
+            case DELETE:
+                for (int i = 0; i < record.incidentLinks.size(); i++)
+                {
+                    Tbl_IncidentLink incidentLink = record.incidentLinks.get(i);
+                    incidentLink.sqlMode = record.sqlMode;
+                    Tbl_IncidentLink_Manager.current.RecordOperation(incidentLink);
+                }
+                operation = super.RecordOperation(context, record, SuccessMessage, FailMessage);
+                break;
         }
-        return incidentList;
+
+        return operation;
     }
 
-    @Override
-    public long Insert(SQLiteDatabase db, Tbl_Incident toInsert)
-    {
-        long resultID = super.Insert(db, toInsert);
-        if (resultID != -1)
+    /*
+        @Override
+        public boolean Update(Tbl_Incident toUpdate)
         {
-            for (int i = 0; i < toInsert.incidentLinks.size(); i++)
+            super.Update(db, toUpdate);
+            for (int i = 0; i < toUpdate.incidentLinks.size(); i++)
             {
-                Tbl_IncidentLink incidentLink = toInsert.incidentLinks.get(i);
-                incidentLink.incidentID = resultID;
-                long id = Tbl_IncidentLink_Manager.current.Insert(db, incidentLink);
-                if (id == -1)
+                Tbl_IncidentLink incidentLink = toUpdate.incidentLinks.get(i);
+                switch (incidentLink.sqlMode)
                 {
-                    break;
+                    case INSERT:
+                        incidentLink.incidentID = toUpdate.incidentID;
+                        Tbl_IncidentLink_Manager.current.Insert(db, incidentLink);
+                        break;
+                    case DELETE:
+                        Tbl_IncidentLink_Manager.current.Delete(db, incidentLink);
+                        break;
+                    case UPDATE:
+                        Tbl_IncidentLink_Manager.current.Update(db, incidentLink);
+                        break;
                 }
             }
+            return true;
         }
-        return resultID;
-    }
-
-    @Override
-    public boolean Update(SQLiteDatabase db, Tbl_Incident toUpdate)
-    {
-        super.Update(db, toUpdate);
-        for (int i = 0; i < toUpdate.incidentLinks.size(); i++)
-        {
-            Tbl_IncidentLink incidentLink = toUpdate.incidentLinks.get(i);
-            switch (incidentLink.sqlMode)
-            {
-                case INSERT:
-                    incidentLink.incidentID = toUpdate.incidentID;
-                    Tbl_IncidentLink_Manager.current.Insert(db, incidentLink);
-                    break;
-                case DELETE:
-                    Tbl_IncidentLink_Manager.current.Delete(db, incidentLink);
-                    break;
-                case UPDATE:
-                    Tbl_IncidentLink_Manager.current.Update(db, incidentLink);
-                    break;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public void Delete(SQLiteDatabase db, Tbl_Incident toDelete)
-    {
-        super.Delete(db, toDelete);
-        for (int i = 0; i < toDelete.incidentLinks.size(); i++)
-        {
-            Tbl_IncidentLink_Manager.current.Delete(db, toDelete.incidentLinks.get(i));
-        }
-    }
-
+*/
     @Override
     public String GetPrimaryKey()
     {
@@ -112,72 +126,31 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
     }
 
     @Override
-    public String GetCreateScript()
+    protected String GetCreateScript()
     {
-        return Attributes.INCIDENTID.name() + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                Attributes.STARTTIME.name() + " TEXT, " +
-                Attributes.ENDTIME.name() + " TEXT, " +
-                Attributes.DESCRIPTION.name() + " TEXT, " +
-                Attributes.ADDRESS.name() + " TEXT, " +
-                Attributes.CITYSTZIP.name() + " TEXT, " +
-                Attributes.LATITUDE.name() + " REAL, " +
-                Attributes.LONGITUDE.name() + " REAL";
+        return Attributes.INCIDENTID.name() + " INT(11) NOT NULL AUTO_INCREMENT,\n" +
+                Attributes.STARTTIME.name() + " VARCHAR(20) NOT NULL,\n" +
+                Attributes.ENDTIME.name() + " VARCHAR(20) NOT NULL,\n" +
+                Attributes.DESCRIPTION.name() + " VARCHAR(100) NOT NULL,\n" +
+                Attributes.ADDRESS.name() + " VARCHAR(100) NOT NULL,\n" +
+                Attributes.CITYSTZIP.name() + " VARCHAR(100) NOT NULL,\n" +
+                Attributes.LATITUDE.name() + " VARCHAR(20) NOT NULL,\n" +
+                Attributes.LONGITUDE.name() + " VARCHAR(20) NOT NULL,\n" +
+                "PRIMARY KEY (" + Attributes.INCIDENTID.name() + ")\n";
     }
 
     @Override
-    public String GetSelectScript(Tbl_Incident searchCritera)
+    protected List<Pair<String, String>> GetContentValues(Tbl_Incident record)
     {
-        String whereClause = "";
-        if (searchCritera.incidentID > -1)
-        {
-            whereClause += Attributes.INCIDENTID.name() + " = " + Long.toString(searchCritera.incidentID);
-        }
-        if (!searchCritera.startTime.isEmpty())
-        {
-            whereClause += Attributes.STARTTIME.name() + " = " + searchCritera.startTime;
-        }
-        if (!searchCritera.endTime.isEmpty())
-        {
-            whereClause += Attributes.ENDTIME.name() + " = " + searchCritera.endTime;
-        }
-        if (!searchCritera.description.isEmpty())
-        {
-            whereClause += Attributes.DESCRIPTION.name() + " = " + searchCritera.description;
-        }
-        if (!searchCritera.address.isEmpty())
-        {
-            whereClause += Attributes.ADDRESS.name() + " = " + searchCritera.address;
-        }
-        if (!searchCritera.citySTZip.isEmpty())
-        {
-            whereClause += Attributes.CITYSTZIP.name() + " = " + searchCritera.citySTZip;
-        }
-        if (searchCritera.latitude != 0.0)
-        {
-            whereClause += Attributes.LATITUDE.name() + " = " + Double.toString(searchCritera.latitude);
-        }
-        if (searchCritera.longitude != 0.0)
-        {
-            whereClause += Attributes.LONGITUDE.name() + " = " + Double.toString(searchCritera.longitude);
-        }
-        return whereClause;
-    }
-
-    @Override
-    public ContentValues GetContentValues(Tbl_Incident record, boolean isUpdate)
-    {
-        ContentValues values = new ContentValues();
-        values.put(Attributes.STARTTIME.name(), record.startTime);
-        values.put(Attributes.ENDTIME.name(), record.endTime);
-        values.put(Attributes.DESCRIPTION.name(), record.description);
-        values.put(Attributes.ADDRESS.name(), record.address);
-        values.put(Attributes.CITYSTZIP.name(), record.citySTZip);
-        values.put(Attributes.LATITUDE.name(), record.latitude);
-        values.put(Attributes.LONGITUDE.name(), record.longitude);
-        if (isUpdate)
-        {
-            values.put(Attributes.INCIDENTID.name(), record.incidentID);
-        }
+        List<Pair<String, String>> values = new ArrayList<Pair<String, String>>();
+        values.add(new Pair<String, String>(Attributes.INCIDENTID.name(), Long.toString(record.incidentID)));
+        values.add(new Pair<String, String>(Attributes.STARTTIME.name(), record.startTime));
+        values.add(new Pair<String, String>(Attributes.ENDTIME.name(), record.endTime));
+        values.add(new Pair<String, String>(Attributes.DESCRIPTION.name(), record.description));
+        values.add(new Pair<String, String>(Attributes.ADDRESS.name(), record.address));
+        values.add(new Pair<String, String>(Attributes.CITYSTZIP.name(), record.citySTZip));
+        values.add(new Pair<String, String>(Attributes.LATITUDE.name(), record.latitude));
+        values.add(new Pair<String, String>(Attributes.LONGITUDE.name(), record.longitude));
         return values;
     }
 
@@ -188,21 +161,33 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
     }
 
     @Override
-    public List<Tbl_Incident> GetList(Cursor cursor)
+    public List<Tbl_Incident> GetList(List<JSONObject> JSONList)
     {
         List<Tbl_Incident> resultList = new ArrayList<Tbl_Incident>();
-        while (cursor.moveToNext())
+        try
         {
-            Tbl_Incident record = new Tbl_Incident();
-            record.incidentID = cursor.getLong(Attributes.INCIDENTID.ordinal());
-            record.startTime = cursor.getString(Attributes.STARTTIME.ordinal());
-            record.endTime = cursor.getString(Attributes.ENDTIME.ordinal());
-            record.description = cursor.getString(Attributes.DESCRIPTION.ordinal());
-            record.address = cursor.getString(Attributes.ADDRESS.ordinal());
-            record.citySTZip = cursor.getString(Attributes.CITYSTZIP.ordinal());
-            record.latitude = cursor.getDouble(Attributes.LATITUDE.ordinal());
-            record.longitude = cursor.getDouble(Attributes.LONGITUDE.ordinal());
-            resultList.add(record);
+            for (JSONObject json : JSONList)
+            {
+                Tbl_Incident record = new Tbl_Incident();
+                record.incidentID = json.getLong(Attributes.INCIDENTID.name());
+                record.startTime = json.getString(Attributes.STARTTIME.name());
+                record.endTime = json.getString(Attributes.ENDTIME.name());
+                record.description = json.getString(Attributes.DESCRIPTION.name());
+                record.address = json.getString(Attributes.ADDRESS.name());
+                record.citySTZip = json.getString(Attributes.CITYSTZIP.name());
+                record.latitude = json.getString(Attributes.LATITUDE.name());
+                record.longitude = json.getString(Attributes.LONGITUDE.name());
+
+                //get the incident links for this record
+                Tbl_IncidentLink incidentLink = new Tbl_IncidentLink();
+                incidentLink.incidentID = record.incidentID;
+                record.incidentLinks = Tbl_IncidentLink_Manager.current.Select(incidentLink);
+                resultList.add(record);
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
         }
         return resultList;
     }

@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.example.kyle.myapplication.CustomControls.DataListGridAdapter;
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
-import com.example.kyle.myapplication.Database.Database_Manager;
 import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink;
 import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
@@ -32,7 +31,6 @@ import java.util.List;
 
 public class CreateEditIncidentLinks extends AppCompatActivity
 {
-    private Database_Manager db;
     private GridView gridView;
     private Button btnAdd, btnClear;
     private TextView lblAddPersonnel;
@@ -55,7 +53,6 @@ public class CreateEditIncidentLinks extends AppCompatActivity
         txtRanking = (EditText) findViewById(R.id.txtRanking);
         cboPersonnel = (Spinner) findViewById(R.id.cboPersonnel);
         cboRole = (Spinner) findViewById(R.id.cboRole);
-        db = new Database_Manager(this);
         setSpinnerData();
 
         incidentLinks = new ArrayList<Abstract_Table>(CreateEditIncident.incidentLinks);
@@ -82,8 +79,8 @@ public class CreateEditIncidentLinks extends AppCompatActivity
 
     private void setSpinnerData()
     {
-        List<Tbl_Personnel> personnelList = Tbl_Personnel_Manager.current.Select(db.getReadableDatabase());
-        List<Tbl_Role> roleList = Tbl_Role_Manager.current.Select(db.getReadableDatabase());
+        List<Tbl_Personnel> personnelList = Tbl_Personnel_Manager.current.Select();
+        List<Tbl_Role> roleList = Tbl_Role_Manager.current.Select();
         Collections.sort(personnelList, new Comparator<Tbl_Personnel>()
         {
             @Override

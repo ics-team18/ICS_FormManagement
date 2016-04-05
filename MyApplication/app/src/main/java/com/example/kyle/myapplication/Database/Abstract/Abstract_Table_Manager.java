@@ -1,9 +1,19 @@
 package com.example.kyle.myapplication.Database.Abstract;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Pair;
 
+import com.example.kyle.myapplication.Database.DBOperation;
+import com.example.kyle.myapplication.Database.DatabaseManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,107 +31,153 @@ public abstract class Abstract_Table_Manager<T>
         SUBMITTEDFORMS,
     }
 
-    public void Create(SQLiteDatabase db)
+    public String GetFullCreateScript()
     {
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + GetTableName() + "(" + GetCreateScript() + ")");
+        String createScript = "CREATE TABLE IF NOT EXISTS " + GetTableName() + "(" + GetCreateScript() + ");";
+        return createScript;
     }
 
-    public long Insert(SQLiteDatabase db, T toInsert)
+    public DBOperation RecordOperation(T record)
     {
-        ContentValues values = GetContentValues(toInsert, false);
-        long result = db.insert(GetTableName(), null, values);
-        return result;
+        return RecordOperation(null, record, "", "");
     }
 
-    public boolean Update(SQLiteDatabase db, T toUpdate)
+    public DBOperation RecordOperation(Context context, T record)
     {
-        ContentValues values = GetContentValues(toUpdate, true);
-        String whereClause = GetWhereClause();
-        String[] whereArgs = GetWhereArgs(toUpdate);
-        db.update(GetTableName(), values, whereClause, whereArgs);
-        return true;
+        return RecordOperation(context, record, "", "");
     }
 
-    public void Delete(SQLiteDatabase db, T toDelete)
+    public DBOperation RecordOperation(Context context, T record, String SuccessMessage, String FailMessage)
     {
-        String whereClause = GetWhereClause();
-        String[] whereArgs = GetWhereArgs(toDelete);
-        int rowsDeleted = db.delete(GetTableName(), whereClause, whereArgs);
+        List<Pair<String, String>> pairList = GetContentValues(record);
+        int listSize = pairList.size();
+        String query = "";
+        Abstract_Table.SQLMode sqlMode = ((Abstract_Table) record).sqlMode;
+        String primaryKeyField = GetPrimaryKey();
+        switch (sqlMode)
+        {
+            case INSERT:
+                query = "INSERT INTO " + GetTableName() + "(";
+                String values = "";
+                for (int i = 0; i < listSize; i++)
+                {
+                    Pair<String, String> pair = pairList.get(i);
+                    if (pair.first.equals(primaryKeyField))
+                    {
+                        continue;
+                    }
+                    query += pair.first;
+                    values += "'" + pair.second + "'";
+                    if (i < listSize - 1)
+                    {
+                        query += ", ";
+                        values += ", ";
+                    }
+                }
+                query += ") VALUES(" + values + ")";
+                break;
+            case UPDATE:
+            case DELETE:
+                if (sqlMode == Abstract_Table.SQLMode.DELETE)
+                {
+                    query = "DELETE FROM " + GetTableName();
+                }
+                else if (sqlMode == Abstract_Table.SQLMode.UPDATE)
+                {
+                    query = "UPDATE " + GetTableName() + " SET ";
+                    for (int i = 0; i < listSize; i++)
+                    {
+                        Pair<String, String> pair = pairList.get(i);
+                        if (pair.first.equals(primaryKeyField))
+                        {
+                            continue;
+                        }
+                        query += pair.first + " = '" + pair.second + "'";
+                        if (i < listSize - 1)
+                        {
+                            query += ", ";
+                        }
+                    }
+                }
+                query += " WHERE " + primaryKeyField + " = " + GetPrimaryKeyValue(record);
+                break;
+        }
+        DBOperation operation = new DBOperation(sqlMode, query, SuccessMessage, FailMessage);
+        operation = DatabaseManager.PerformOperation(context, operation);
+        return operation;
     }
 
-    public List<T> Select(SQLiteDatabase db)
+    public List<T> Select()
     {
-        return Select(db, null);
+        return Select(null);
     }
 
-    public List<T> Select(SQLiteDatabase db, T searchCriteria)
+    public List<T> Select(T searchCriteria)
     {
         String whereClause = "";
         if (searchCriteria != null)
         {
-            whereClause = GetSelectScript(searchCriteria);
+            List<Pair<String, String>> pairList = GetContentValues(searchCriteria);
+            int listSize = pairList.size();
+            for (int i = 0; i < listSize; i++)
+            {
+                Pair<String, String> pair = pairList.get(i);
+                if (pair.first != null && pair.second != null && !pair.first.isEmpty() && !pair.second.isEmpty() && !pair.second.equals("-1"))
+                {
+                    whereClause += "AND " + pair.first + " = '" + pair.second + "'";
+                    if (i < listSize - 1)
+                    {
+                        whereClause += "\n";
+                    }
+                }
+            }
             if (!whereClause.isEmpty())
             {
-                whereClause = whereClause.replace("= NOT NULL", "IS NOT NULL");
-                whereClause = whereClause.replace("= NULL", "IS NULL");
-                whereClause = whereClause.replace("= !=", "!=");
-                whereClause = whereClause.replace("= =", "=");
                 whereClause = "WHERE " + whereClause;
-                whereClause = whereClause.replace("WHERE  AND ", "WHERE ");
+                whereClause = whereClause.replace("WHERE AND ", "WHERE ");
+                whereClause = whereClause.replace("''''", "''");
             }
         }
-        Cursor result = db.rawQuery("SELECT * FROM " + GetTableName() + " " + whereClause, null);
-        List<T> resultList = GetList(result);
+        String query = "SELECT * FROM " + GetTableName() + " " + whereClause;
+        DBOperation operation = new DBOperation(Abstract_Table.SQLMode.SELECT, query);
+        operation = DatabaseManager.PerformOperation(operation);
+        List<JSONObject> JSONList = new ArrayList<JSONObject>();
+        try
+        {
+            JSONArray jsonArray = new JSONArray(operation.JSONResult);
+            for (int i = 0; i < jsonArray.length(); i++)
+            {
+                JSONList.add(jsonArray.getJSONObject(i));
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        List<T> resultList = GetList(JSONList);
         return resultList;
     }
 
-    public int GetNextID(SQLiteDatabase db)
+    public long GetNextID()
     {
-        String query = "SELECT SEQ FROM SQLITE_SEQUENCE WHERE NAME = '" + GetTableName() + "'";
-        int id = 1;
-        Cursor result = db.rawQuery(query, null);
-        if (result.moveToFirst())
-        {
-            id = result.getInt(0);
-            ++id;
-        }
+        String query = "SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'ICS' AND TABLE_NAME = '" + GetTableName() + "'";
+        long id = 1;
+        //Techincally this is a select but we can use insert to save having to decode any JSON
+        DBOperation operation = new DBOperation(Abstract_Table.SQLMode.INSERT, query);
+        operation = DatabaseManager.PerformOperation(operation);
+        id = operation.ResultID + 1;
         return id;
     }
 
-    public int GetLastID(SQLiteDatabase db)
-    {
-        String query = "SELECT MAX(" + GetPrimaryKey() + ") FROM " + GetTableName();
-        int id = 1;
-        Cursor result = db.rawQuery(query, null);
-        if (result.moveToFirst())
-        {
-            id = result.getInt(0);
-            ++id;
-        }
-        return id;
-    }
+    protected abstract String GetPrimaryKey();
 
-    public abstract String GetPrimaryKey();
+    protected abstract String GetPrimaryKeyValue(T record);
 
-    public abstract String GetPrimaryKeyValue(T record);
+    protected abstract String GetTableName();
 
-    public abstract String GetTableName();
+    protected abstract String GetCreateScript();
 
-    public abstract String GetCreateScript();
+    protected abstract List<T> GetList(List<JSONObject> JSONList);
 
-    public abstract String GetSelectScript(T searchCriteria);
-
-    public abstract List<T> GetList(Cursor cursor);
-
-    public abstract ContentValues GetContentValues(T record, boolean isUpdate);
-
-    private String GetWhereClause()
-    {
-        return GetPrimaryKey() + " = ?";
-    }
-
-    private String[] GetWhereArgs(T record)
-    {
-        return new String[]{GetPrimaryKeyValue(record)};
-    }
+    protected abstract List<Pair<String, String>> GetContentValues(T record);
 }

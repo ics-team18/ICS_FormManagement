@@ -5,14 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
-import com.example.kyle.myapplication.Database.Database_Manager;
+import com.example.kyle.myapplication.Database.DBOperation;
 import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
 import com.example.kyle.myapplication.Helpers.LoggedInUser;
@@ -22,7 +22,6 @@ import com.example.kyle.myapplication.Screens.DataList;
 
 public class CreateEditPersonnel extends AppCompatActivity
 {
-    private Database_Manager db;
     private EditText txtFirstName, txtLastName, txtPositionTitle, txtPhoneNumber, txtEmail, txtPassword, txtConfirmPassword;
     private CheckBox chkIsSupervisor;
     public static boolean fromLoginScreen = true;
@@ -33,7 +32,6 @@ public class CreateEditPersonnel extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createedit_personnel);
-        db = new Database_Manager(this);
         txtFirstName = (EditText) findViewById(R.id.txtFirstName);
         txtLastName = (EditText) findViewById(R.id.txtLastName);
         txtPositionTitle = (EditText) findViewById(R.id.txtPositionTitle);
@@ -122,17 +120,23 @@ public class CreateEditPersonnel extends AppCompatActivity
                 if (toUpdate != null)
                 {
                     record.personnelID = toUpdate.personnelID;
+                    record.sqlMode = Abstract_Table.SQLMode.UPDATE;
                     toUpdate = record;
-                    Tbl_Personnel_Manager.current.Update(db.getWritableDatabase(), toUpdate);
-                    Toast.makeText(this, "Personnel Updated", Toast.LENGTH_LONG).show();
-                    OpenScreens.OpenDataListScreen(DataList.Mode.Edit, Abstract_Table_Manager.Table.PERSONNEL);
-                    finish();
+                    DBOperation resultOperation = Tbl_Personnel_Manager.current.RecordOperation(this, toUpdate, "Personnel Updated", "Unable to Update Personnel");
+                    if (resultOperation != null && resultOperation.Success())
+                    {
+                        OpenScreens.OpenDataListScreen(DataList.Mode.Edit, Abstract_Table_Manager.Table.PERSONNEL);
+                        finish();
+                    }
                 }
                 else
                 {
-                    Tbl_Personnel_Manager.current.Insert(db.getWritableDatabase(), record);
-                    Toast.makeText(this, "Personnel Added", Toast.LENGTH_LONG).show();
-                    clear();
+                    record.sqlMode = Abstract_Table.SQLMode.INSERT;
+                    DBOperation resultOperation = Tbl_Personnel_Manager.current.RecordOperation(this, record, "Personnel Added", "Unable to Add Personnel");
+                    if (resultOperation != null && resultOperation.Success())
+                    {
+                        clear();
+                    }
                 }
             }
             else

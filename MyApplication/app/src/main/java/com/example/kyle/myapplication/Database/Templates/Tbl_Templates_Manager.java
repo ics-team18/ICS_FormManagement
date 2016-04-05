@@ -1,15 +1,18 @@
 package com.example.kyle.myapplication.Database.Templates;
 
-import android.content.ContentValues;
+import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Pair;
 
-import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
-import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink;
 import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
-import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role_Manager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +29,13 @@ public class Tbl_Templates_Manager extends Abstract_Table_Manager<Tbl_Templates>
         TEMPLATESID,
         ROLEID,
         DESCRIPTION,
-        TEMPLATEURL,
+        FILENAME,
     }
 
     @Override
-    public List<Tbl_Templates> Select(SQLiteDatabase db, Tbl_Templates searchCriteria)
+    public List<Tbl_Templates> Select(Tbl_Templates searchCriteria)
     {
-        List<Tbl_Templates> templatesList = super.Select(db, searchCriteria);
+        List<Tbl_Templates> templatesList = super.Select(searchCriteria);
         for (int i = 0; i < templatesList.size(); i++)
         {
             Tbl_Templates template = templatesList.get(i);
@@ -40,7 +43,7 @@ public class Tbl_Templates_Manager extends Abstract_Table_Manager<Tbl_Templates>
             //get the role for this template record
             Tbl_Role roleSearchCriteria = new Tbl_Role();
             roleSearchCriteria.roleID = template.roleID;
-            template.role = Tbl_Role_Manager.current.Select(db, roleSearchCriteria).get(0);
+            template.role = Tbl_Role_Manager.current.Select(roleSearchCriteria).get(0);
         }
         return templatesList;
     }
@@ -58,50 +61,24 @@ public class Tbl_Templates_Manager extends Abstract_Table_Manager<Tbl_Templates>
     }
 
     @Override
-    public String GetCreateScript()
+    protected String GetCreateScript()
     {
-        return Attributes.TEMPLATESID.name() + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                Attributes.ROLEID.name() + " TEXT COLLATE NOCASE, " +
-                Attributes.DESCRIPTION.name() + " TEXT COLLATE NOCASE, " +
-                Attributes.TEMPLATEURL.name() + " TEXT COLLATE NOCASE, " +
-                "FOREIGN KEY(" + Attributes.ROLEID.name() + ") REFERENCES " + Tbl_Role_Manager.current.GetTableName() + "(" + Tbl_Role_Manager.Attributes.ROLEID.name() + ")";
+        return Attributes.TEMPLATESID.name() + " INT(11) NOT NULL AUTO_INCREMENT,\n" +
+                Attributes.ROLEID.name() + " INT(11) NOT NULL,\n" +
+                Attributes.DESCRIPTION.name() + " VARCHAR(30) NOT NULL,\n" +
+                Attributes.FILENAME.name() + " VARCHAR(100) NOT NULL,\n" +
+                "PRIMARY KEY (" + Attributes.TEMPLATESID.name() + "),\n" +
+                "FOREIGN KEY (" + Attributes.ROLEID.name() + ") REFERENCES " + Tbl_Role_Manager.current.GetTableName() + "(" + Tbl_Role_Manager.Attributes.ROLEID.name() + ")\n";
     }
 
     @Override
-    public String GetSelectScript(Tbl_Templates searchCritera)
+    protected List<Pair<String, String>> GetContentValues(Tbl_Templates record)
     {
-        String whereClause = "";
-        if (searchCritera.templatesID > -1)
-        {
-            whereClause += " AND " + Attributes.TEMPLATESID.name() + " = '" + Long.toString(searchCritera.templatesID) + "'";
-        }
-        if (searchCritera.roleID > -1)
-        {
-            whereClause += " AND " + Attributes.ROLEID.name() + " = '" + searchCritera.roleID + "'";
-        }
-        if (!searchCritera.description.isEmpty())
-        {
-            whereClause += " AND " + Attributes.DESCRIPTION.name() + " = '" + searchCritera.description + "'";
-        }
-        if (!searchCritera.templateURL.isEmpty())
-        {
-            whereClause += " AND " + Attributes.TEMPLATEURL.name() + " = '" + searchCritera.templateURL + "'";
-        }
-
-        return whereClause;
-    }
-
-    @Override
-    public ContentValues GetContentValues(Tbl_Templates record, boolean isUpdate)
-    {
-        ContentValues values = new ContentValues();
-        values.put(Attributes.ROLEID.name(), record.roleID);
-        values.put(Attributes.DESCRIPTION.name(), record.description);
-        values.put(Attributes.TEMPLATEURL.name(), record.templateURL);
-        if (isUpdate)
-        {
-            values.put(Attributes.TEMPLATESID.name(), record.templatesID);
-        }
+        List<Pair<String, String>> values = new ArrayList<Pair<String, String>>();
+        values.add(new Pair<String, String>(Attributes.TEMPLATESID.name(), Long.toString(record.templatesID)));
+        values.add(new Pair<String, String>(Attributes.ROLEID.name(), Long.toString(record.roleID)));
+        values.add(new Pair<String, String>(Attributes.DESCRIPTION.name(), record.description));
+        values.add(new Pair<String, String>(Attributes.FILENAME.name(), record.fileName));
         return values;
     }
 
@@ -112,17 +89,28 @@ public class Tbl_Templates_Manager extends Abstract_Table_Manager<Tbl_Templates>
     }
 
     @Override
-    public List<Tbl_Templates> GetList(Cursor cursor)
+    public List<Tbl_Templates> GetList(List<JSONObject> JSONList)
     {
         List<Tbl_Templates> resultList = new ArrayList<Tbl_Templates>();
-        while (cursor.moveToNext())
+        try
         {
-            Tbl_Templates record = new Tbl_Templates();
-            record.templatesID = cursor.getLong(Attributes.TEMPLATESID.ordinal());
-            record.roleID = cursor.getLong(Attributes.ROLEID.ordinal());
-            record.description = cursor.getString(Attributes.DESCRIPTION.ordinal());
-            record.templateURL = cursor.getString(Attributes.TEMPLATEURL.ordinal());
-            resultList.add(record);
+            for (JSONObject json : JSONList)
+            {
+                Tbl_Templates record = new Tbl_Templates();
+                record.templatesID = json.getLong(Attributes.TEMPLATESID.name());
+                record.roleID = json.getLong(Attributes.ROLEID.name());
+                record.description = json.getString(Attributes.DESCRIPTION.name());
+                record.fileName = json.getString(Attributes.FILENAME.name());
+
+                Tbl_Role roleSearchCriteria = new Tbl_Role();
+                roleSearchCriteria.roleID = record.roleID;
+                record.role = Tbl_Role_Manager.current.Select(roleSearchCriteria).get(0);
+                resultList.add(record);
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
         }
         return resultList;
     }

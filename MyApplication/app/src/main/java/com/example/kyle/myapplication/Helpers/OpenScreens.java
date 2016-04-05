@@ -15,6 +15,7 @@ import com.example.kyle.myapplication.Screens.CreateEdit.CreateEditIncident;
 import com.example.kyle.myapplication.Screens.CreateEdit.CreateEditPersonnel;
 import com.example.kyle.myapplication.Screens.CreateEdit.CreateEditRole;
 import com.example.kyle.myapplication.Screens.DataList;
+import com.example.kyle.myapplication.Screens.DownloadTemplate;
 import com.example.kyle.myapplication.Screens.Login;
 import com.example.kyle.myapplication.Screens.MainScreen;
 import com.example.kyle.myapplication.Screens.CreateEdit.Manage_Data;
@@ -80,7 +81,12 @@ public class OpenScreens extends Activity
         context.startActivity(new Intent(context, CreateEditRole.class));
     }
 
-    public static void OpenUploadTemplatesScreen(Tbl_Templates toUpdate)
+    public static void OpenDownloadTemplateScreen()
+    {
+        context.startActivity(new Intent(context, DownloadTemplate.class));
+    }
+
+    public static void OpenUploadTemplateScreen(Tbl_Templates toUpdate)
     {
         CreateEditTemplates.toUpdate = toUpdate;
         context.startActivity(new Intent(context, CreateEditTemplates.class));
