@@ -333,7 +333,7 @@ public class Login extends AppCompatActivity
         searchCriteria.email = txtEmail.getText().toString();
         searchCriteria.password = txtPassword.getText().toString();
         // for dev purposes we will leave this empty
-        /*if (searchCriteria.email.isEmpty())
+        if (searchCriteria.email.isEmpty())
         {
             Toast.makeText(this, "E-mail address is required.", Toast.LENGTH_LONG).show();
         }
@@ -341,13 +341,13 @@ public class Login extends AppCompatActivity
         {
             Toast.makeText(this, "Password is required.", Toast.LENGTH_LONG).show();
         }
-        else*/
+        else
         {
             List<Tbl_Personnel> resultList = Tbl_Personnel_Manager.current.Select(searchCriteria);
 
             //defaulted to true so you don't have to enter your username and password every time
-            boolean isValid = true && resultList.size() > 0; //resultList.size() == 1;
-            //boolean isValid = resultList.size() == 1;
+            //boolean isValid = true && resultList.size() > 0; //resultList.size() == 1;
+            boolean isValid = resultList.size() == 1;
             if (isValid)
             {
                 LoggedInUser.User = resultList.get(0);
