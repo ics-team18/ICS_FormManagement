@@ -3,6 +3,7 @@ package com.example.kyle.myapplication.Database;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -98,28 +99,31 @@ public class DatabaseManager extends AsyncTask<Void, Void, DBOperation>
                 break;
             }
 
-            operation.ResultMessage = sb.toString();
-            if (result.equals("FAIL"))
+            if (operation != null)
             {
-                operation.ResultMessage = operation.FailMessage;
-            }
-            else
-            {
-                switch (operation.SQLMode)
+                operation.ResultMessage = sb.toString();
+                if (result.equals("FAIL"))
                 {
-                    case INSERT:
-                        operation.ResultID = Long.parseLong(operation.ResultMessage);
-                        operation.AffectedRows = 1;
-                        break;
-                    case UPDATE:
-                    case DELETE:
-                        operation.AffectedRows = Integer.parseInt(operation.ResultMessage);
-                        break;
-                    case SELECT:
-                        operation.JSONResult = operation.ResultMessage;
-                        break;
+                    operation.ResultMessage = operation.FailMessage;
                 }
-                operation.ResultMessage = operation.SuccessMessage;
+                else
+                {
+                    switch (operation.SQLMode)
+                    {
+                        case INSERT:
+                            operation.ResultID = Long.parseLong(operation.ResultMessage);
+                            operation.AffectedRows = 1;
+                            break;
+                        case UPDATE:
+                        case DELETE:
+                            operation.AffectedRows = Integer.parseInt(operation.ResultMessage);
+                            break;
+                        case SELECT:
+                            operation.JSONResult = operation.ResultMessage;
+                            break;
+                    }
+                    operation.ResultMessage = operation.SuccessMessage;
+                }
             }
         }
         catch (Exception ex)

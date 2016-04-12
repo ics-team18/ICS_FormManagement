@@ -7,6 +7,7 @@ public abstract class Abstract_Table
 {
     public enum SQLMode
     {
+        NONE,
         CREATETTABLES,
         INSERT,
         UPDATE,
@@ -14,7 +15,7 @@ public abstract class Abstract_Table
         SELECT,
     }
 
-    public SQLMode sqlMode = SQLMode.INSERT;
+    public SQLMode sqlMode = SQLMode.NONE;
 
     public abstract String isValidRecord();
 

@@ -44,6 +44,10 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+            android:name=".Screens.CreateEdit.CreateEditSubmittedForms"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".Screens.CreateEdit.Manage_Data"
             android:label="@string/title_activity_manage_data"
             android:theme="@style/AppTheme.NoActionBar">

@@ -2,6 +2,7 @@ package com.example.kyle.myapplication.Database.Incident;
 
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
 import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink;
+import com.example.kyle.myapplication.Database.SubmittedForms.Tbl_SubmittedForms;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,7 @@ public class Tbl_Incident extends Abstract_Table
     public String latitude = "";
     public String longitude = "";
     public List<Tbl_IncidentLink> incidentLinks;
+    public List<Tbl_SubmittedForms> submittedForms;
 
     public Tbl_Incident()
     {
@@ -32,7 +34,7 @@ public class Tbl_Incident extends Abstract_Table
         this.incidentID = incidentID;
     }
 
-    public Tbl_Incident(String startTime, String endTime, String description, String address, String citySTZip, String latitude, String longitude, List<Tbl_IncidentLink> incidentLinks)
+    public Tbl_Incident(String startTime, String endTime, String description, String address, String citySTZip, String latitude, String longitude, List<Tbl_IncidentLink> incidentLinks, List<Tbl_SubmittedForms> submittedForms)
     {
         this.startTime = startTime;
         this.endTime = endTime;
@@ -42,6 +44,7 @@ public class Tbl_Incident extends Abstract_Table
         this.latitude = latitude;
         this.longitude = longitude;
         this.incidentLinks = incidentLinks;
+        this.submittedForms = submittedForms;
     }
 
     @Override
@@ -112,7 +115,8 @@ public class Tbl_Incident extends Abstract_Table
                 personnelAndRoles += "\n";
             }
         }
-        return "ID: " + Long.toString(this.incidentID) + "\n" +
+
+        String result = "ID: " + Long.toString(this.incidentID) + "\n" +
                 "Start Time: " + this.startTime + "\n" +
                 "End Time: " + this.endTime + "\n" +
                 "Description: " + this.description + "\n" +
@@ -121,5 +125,33 @@ public class Tbl_Incident extends Abstract_Table
                 "Latitude: " + this.latitude + "\n" +
                 "Longitude: " + this.longitude + "\n" +
                 "Personnel:\n" + personnelAndRoles;
+
+        if (submittedForms != null && submittedForms.size() > 0)
+        {
+            String personnelAndForms = "";
+            List<Tbl_SubmittedForms> sortedForms = new ArrayList<Tbl_SubmittedForms>(submittedForms);
+
+            Collections.sort(sortedForms, new Comparator<Tbl_SubmittedForms>()
+            {
+                @Override
+                public int compare(Tbl_SubmittedForms a, Tbl_SubmittedForms b)
+                {
+                    return a.description.compareTo(b.description);
+                }
+            });
+
+            listSize = sortedForms.size();
+            for (int i = 0; i < listSize; i++)
+            {
+                Tbl_SubmittedForms form = sortedForms.get(i);
+                personnelAndForms += form.personnel.getDataGridDisplayValue() + " - " + form.description + ": " + form.fileName;
+                if (i < listSize - 1)
+                {
+                    personnelAndForms += "\n";
+                }
+            }
+            result += "\nSubmitted Forms:\n" + personnelAndForms;
+        }
+        return result;
     }
 }

@@ -1,9 +1,6 @@
 package com.example.kyle.myapplication.Database.Abstract;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Pair;
 
 import com.example.kyle.myapplication.Database.DBOperation;
@@ -156,17 +153,6 @@ public abstract class Abstract_Table_Manager<T>
         }
         List<T> resultList = GetList(JSONList);
         return resultList;
-    }
-
-    public long GetNextID()
-    {
-        String query = "SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'ICS' AND TABLE_NAME = '" + GetTableName() + "'";
-        long id = 1;
-        //Techincally this is a select but we can use insert to save having to decode any JSON
-        DBOperation operation = new DBOperation(Abstract_Table.SQLMode.INSERT, query);
-        operation = DatabaseManager.PerformOperation(operation);
-        id = operation.ResultID + 1;
-        return id;
     }
 
     protected abstract String GetPrimaryKey();

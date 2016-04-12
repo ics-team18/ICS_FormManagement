@@ -164,8 +164,8 @@ public class DownloadTemplate extends Activity
         String fileName = txtFileName.getText().toString();
         if (!selectedRole.title.isEmpty() && !selectedTemplate.fileName.isEmpty() && !fileName.isEmpty())
         {
-            String saveFile = "data/data/com.example.kyle.myapplication/files/" + fileName;
-            Boolean result = FTPManager.UploadDownloadFile(DownloadTemplate.this, FTPManager.FTPMode.DOWNLOAD, FTPManager.FileType.TEMPLATE, saveFile, selectedTemplate.fileName);
+            String saveFile = "data/data/com.example.kyle.myapplication/" + fileName;
+            Boolean result = FTPManager.UploadDownloadFile(DownloadTemplate.this, FTPManager.FTPMode.DOWNLOAD, saveFile, selectedTemplate.fileName);
             if (result)
             {
                 clear();
@@ -190,23 +190,4 @@ public class DownloadTemplate extends Activity
         }
     }
 
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        Intent chooseFile;
-        Intent intent;
-        chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-        chooseFile.setType("file/*");
-        intent = Intent.createChooser(chooseFile, "Choose a file");
-        startActivityForResult(intent, 1);
-        if (resultCode == RESULT_OK)
-        {
-            if (requestCode == 1)
-            {
-                Uri uri = data.getData();
-                String path = "fd";
-                path += "hi";
-            }
-        }
-    }*/
 }

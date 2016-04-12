@@ -25,6 +25,7 @@ import com.example.kyle.myapplication.Database.DBOperation;
 import com.example.kyle.myapplication.Database.Incident.Tbl_Incident;
 import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink;
 import com.example.kyle.myapplication.Database.Incident.Tbl_Incident_Manager;
+import com.example.kyle.myapplication.Database.SubmittedForms.Tbl_SubmittedForms;
 import com.example.kyle.myapplication.Helpers.OpenScreens;
 import com.example.kyle.myapplication.R;
 import com.example.kyle.myapplication.Screens.DataList;
@@ -42,9 +43,10 @@ import java.util.Locale;
 
 public class CreateEditIncident extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
-    private TextView lblIncidentID, lblDate;
+    private TextView lblDate;
     private EditText txtDescription, txtAddress, txtCitySTZip, txtLatitude, txtLongitude;
     public static List<Tbl_IncidentLink> incidentLinks = new ArrayList<>();
+    public static List<Tbl_SubmittedForms> submittedForms = new ArrayList<>();
     public static Tbl_Incident toUpdate = null;
     private static final int PERMISSION_REQUEST_CODE = 1;
     private GoogleApiClient googleApiClient;
@@ -55,7 +57,6 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createedit_incident);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        lblIncidentID = (TextView) findViewById(R.id.lblIncidentID);
         lblDate = (TextView) findViewById(R.id.lblDate);
         txtDescription = (EditText) findViewById(R.id.txtDescription);
         txtAddress = (EditText) findViewById(R.id.txtAddress);
@@ -79,7 +80,7 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
                             @Override
                             public void run()
                             {
-                                setIDAndDate();
+                                setDate();
                             }
                         });
                     }
@@ -120,18 +121,6 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
             }
         });
 
-        if (toUpdate == null)
-        {
-            t.start();
-            btnCloseIncident.setVisibility(View.GONE);
-        }
-        else
-        {
-            btnCreate.setText("Update");
-            btnClear.setText("Revert Changes");
-            btnCloseIncident.setVisibility(View.VISIBLE);
-        }
-
         Button btnFetchLocation = (Button) findViewById(R.id.btnFetchLocation);
         btnFetchLocation.setOnClickListener(new View.OnClickListener()
         {
@@ -152,6 +141,29 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
             }
         });
 
+        Button btnSubmitForms = (Button) findViewById(R.id.btnSubmitForms);
+        btnSubmitForms.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                submitForms();
+            }
+        });
+
+        if (toUpdate == null)
+        {
+            t.start();
+            btnCloseIncident.setVisibility(View.GONE);
+            btnSubmitForms.setVisibility(View.GONE);
+        }
+        else
+        {
+            btnCreate.setText("Update");
+            btnClear.setText("Revert Changes");
+            btnCloseIncident.setVisibility(View.VISIBLE);
+        }
+
         clear();
     }
 
@@ -162,12 +174,10 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
         return sdf.format(calendar.getTime());
     }
 
-    private void setIDAndDate()
+    private void setDate()
     {
         String formattedDate = getCurrentDateTime();
         lblDate.setText(formattedDate);
-        long nextIncidentID = Tbl_Incident_Manager.current.GetNextID();
-        lblIncidentID.setText(Long.toString(nextIncidentID));
     }
 
     protected void onStart()
@@ -227,7 +237,6 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
     {
         if (toUpdate != null)
         {
-            lblIncidentID.setText(Long.toString(toUpdate.incidentID));
             lblDate.setText(toUpdate.startTime);
             txtDescription.setText(toUpdate.description);
             txtAddress.setText(toUpdate.address);
@@ -239,6 +248,11 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
             {
                 incidentLinks.add(new Tbl_IncidentLink(element));
             }
+            submittedForms = new ArrayList<Tbl_SubmittedForms>(toUpdate.submittedForms.size());
+            for (Tbl_SubmittedForms element : toUpdate.submittedForms)
+            {
+                submittedForms.add(new Tbl_SubmittedForms(element));
+            }
         }
         else
         {
@@ -248,6 +262,7 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
             txtLatitude.setText("");
             txtLongitude.setText("");
             incidentLinks.clear();
+            submittedForms.clear();
         }
     }
 
@@ -260,7 +275,7 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
         String citySTZip = txtCitySTZip.getText().toString();
         String latitude = txtLatitude.getText().toString();
         String longitude = txtLongitude.getText().toString();
-        Tbl_Incident record = new Tbl_Incident(startDate, endDate, description, address, citySTZip, latitude, longitude, incidentLinks);
+        Tbl_Incident record = new Tbl_Incident(startDate, endDate, description, address, citySTZip, latitude, longitude, incidentLinks, submittedForms);
         String anyErrors = record.isValidRecord();
         if (anyErrors.isEmpty())
         {
@@ -284,7 +299,7 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
                 DBOperation resultOperation = Tbl_Incident_Manager.current.RecordOperation(this, record, "Incident Created", "Unable to Create Incident");
                 if (resultOperation != null && resultOperation.Success())
                 {
-                    clear();
+                    finish();
                 }
             }
         }
@@ -350,7 +365,12 @@ public class CreateEditIncident extends AppCompatActivity implements GoogleApiCl
 
     private void setupPersonnel()
     {
-        OpenScreens.OpenSetupPersonnelScreen();
+        OpenScreens.OpenIncidentLinksScreen();
+    }
+
+    private void submitForms()
+    {
+        OpenScreens.OpenSubmittedFormsScreen(toUpdate.incidentID);
     }
 
     @Override

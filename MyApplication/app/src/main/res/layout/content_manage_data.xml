@@ -77,21 +77,5 @@
             android:layout_column="0"
             />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Submitted Forms"
-            android:id="@+id/btnSubmittedForms"
-            android:textSize="16sp"
-            android:layout_below="@+id/btnCreate"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="37dp"
-            android:layout_alignRight="@+id/btnCreate"
-            android:layout_alignEnd="@+id/btnCreate"
-            android:layout_row="1"
-            android:layout_column="0"
-            />
-
     </LinearLayout>
 </RelativeLayout>

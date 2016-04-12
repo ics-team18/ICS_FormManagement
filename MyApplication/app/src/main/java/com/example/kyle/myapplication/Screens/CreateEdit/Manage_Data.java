@@ -22,7 +22,6 @@ public class Manage_Data extends AppCompatActivity
         Button btnPersonnel = (Button) findViewById(R.id.btnCreate);
         Button btnRoles = (Button) findViewById(R.id.btnRoles);
         Button btnIncidents = (Button) findViewById(R.id.btnIncidents);
-        Button btnSubmittedForms = (Button) findViewById(R.id.btnSubmittedForms);
         Button btnTemplates = (Button) findViewById(R.id.btnTemplates);
 
         btnPersonnel.setOnClickListener(new View.OnClickListener()
@@ -52,15 +51,6 @@ public class Manage_Data extends AppCompatActivity
             }
         });
 
-        btnSubmittedForms.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                SelectionMenu(Abstract_Table_Manager.Table.SUBMITTEDFORMS);
-            }
-        });
-
         btnTemplates.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -78,14 +68,7 @@ public class Manage_Data extends AppCompatActivity
         selectionDialog.show();
 
         TextView txtTable = (TextView) selectionDialog.findViewById(R.id.txtTable);
-        if (table == Abstract_Table_Manager.Table.SUBMITTEDFORMS)
-        {
-            txtTable.setText("Submitted Forms");
-        }
-        else
-        {
-            txtTable.setText(table.toString());
-        }
+        txtTable.setText(table.toString());
         Button btnCreate = (Button) selectionDialog.findViewById(R.id.btnCreate);
         Button btnEdit = (Button) selectionDialog.findViewById(R.id.btnEdit);
         Button btnDelete = (Button) selectionDialog.findViewById(R.id.btnDelete);
@@ -108,8 +91,6 @@ public class Manage_Data extends AppCompatActivity
                         break;
                     case ROLE:
                         OpenScreens.OpenCreateRoleScreen(null);
-                        break;
-                    case SUBMITTEDFORMS:
                         break;
                     case TEMPLATES:
                         OpenScreens.OpenUploadTemplateScreen(null);

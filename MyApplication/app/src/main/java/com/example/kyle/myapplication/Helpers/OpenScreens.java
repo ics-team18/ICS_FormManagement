@@ -14,6 +14,7 @@ import com.example.kyle.myapplication.R;
 import com.example.kyle.myapplication.Screens.CreateEdit.CreateEditIncident;
 import com.example.kyle.myapplication.Screens.CreateEdit.CreateEditPersonnel;
 import com.example.kyle.myapplication.Screens.CreateEdit.CreateEditRole;
+import com.example.kyle.myapplication.Screens.CreateEdit.CreateEditSubmittedForms;
 import com.example.kyle.myapplication.Screens.DataList;
 import com.example.kyle.myapplication.Screens.DownloadTemplate;
 import com.example.kyle.myapplication.Screens.Login;
@@ -92,8 +93,14 @@ public class OpenScreens extends Activity
         context.startActivity(new Intent(context, CreateEditTemplates.class));
     }
 
-    public static void OpenSetupPersonnelScreen()
+    public static void OpenIncidentLinksScreen()
     {
         context.startActivity(new Intent(context, CreateEditIncidentLinks.class));
+    }
+
+    public static void OpenSubmittedFormsScreen(long IncidentID)
+    {
+        CreateEditSubmittedForms.IncidentID = IncidentID;
+        context.startActivity(new Intent(context, CreateEditSubmittedForms.class));
     }
 }

@@ -1,11 +1,9 @@
 package com.example.kyle.myapplication.Database.Role;
 
-import android.database.Cursor;
 import android.util.Pair;
 
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

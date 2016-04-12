@@ -25,25 +25,18 @@ public class FTPManager extends AsyncTask<Void, Void, Boolean>
         DOWNLOAD,
     }
 
-    public enum FileType
-    {
-        TEMPLATE,
-        SUBMITTEDFORM,
-    }
-
     private String IP = "192.168.0.15";
     private String userName = "ICSFormsDev";
     private String password = "CEG4981";
     private String filePathAndName = "";
     private String fileName = "";
     private FTPMode ftpMode;
-    private FileType fileType;
     private Context context;
     private String ResultMessage = "";
 
-    public static Boolean UploadDownloadFile(Context context, FTPMode ftpMode, FileType fileType, String filePathAndName, String fileName)
+    public static Boolean UploadDownloadFile(Context context, FTPMode ftpMode, String filePathAndName, String fileName)
     {
-        FTPManager ftpManager = new FTPManager(context, ftpMode, fileType, filePathAndName, fileName);
+        FTPManager ftpManager = new FTPManager(context, ftpMode, filePathAndName, fileName);
         Boolean result = false;
         try
         {
@@ -60,11 +53,10 @@ public class FTPManager extends AsyncTask<Void, Void, Boolean>
         return result;
     }
 
-    private FTPManager(Context context, FTPMode ftpMode, FileType fileType, String filePathAndName, String fileName)
+    private FTPManager(Context context, FTPMode ftpMode, String filePathAndName, String fileName)
     {
         this.context = context;
         this.ftpMode = ftpMode;
-        this.fileType = fileType;
         this.filePathAndName = filePathAndName;
         this.fileName = fileName;
     }
@@ -80,7 +72,7 @@ public class FTPManager extends AsyncTask<Void, Void, Boolean>
         Boolean result = false;
         try
         {
-            fileName = "/" + (fileType == FileType.TEMPLATE ? "Templates" : "SubmittedForms") + "/" + fileName;
+            fileName = "/" + (ftpMode == FTPMode.DOWNLOAD ? "Templates" : "SubmittedForms") + "/" + fileName;
             if (ftpMode == FTPMode.UPLOAD)
             {
                 FTPClient con = new FTPClient();

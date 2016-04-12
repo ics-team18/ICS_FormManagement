@@ -94,7 +94,7 @@ public class CreateEditTemplates extends AppCompatActivity
         {
             if (toUpdate != null)
             {
-                record.templatesID = toUpdate.templatesID;
+                record.templateID = toUpdate.templateID;
                 record.sqlMode = Abstract_Table.SQLMode.UPDATE;
                 toUpdate = record;
                 DBOperation resultOperation = Tbl_Templates_Manager.current.RecordOperation(this, toUpdate, "Template Updated", "Unable to Update Template");

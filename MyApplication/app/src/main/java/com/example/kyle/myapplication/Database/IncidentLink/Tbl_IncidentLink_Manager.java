@@ -1,22 +1,14 @@
 package com.example.kyle.myapplication.Database.IncidentLink;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Pair;
-
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Database.Incident.Tbl_Incident_Manager;
 import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel;
 import com.example.kyle.myapplication.Database.Personnel.Tbl_Personnel_Manager;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role;
 import com.example.kyle.myapplication.Database.Role.Tbl_Role_Manager;
-import com.example.kyle.myapplication.Database.SubmittedForms.Tbl_SubmittedForms;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 

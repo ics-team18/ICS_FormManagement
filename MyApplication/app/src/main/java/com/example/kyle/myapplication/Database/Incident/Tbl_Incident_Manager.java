@@ -1,9 +1,6 @@
 package com.example.kyle.myapplication.Database.Incident;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Pair;
 
 import com.example.kyle.myapplication.Database.Abstract.Abstract_Table;
@@ -11,9 +8,10 @@ import com.example.kyle.myapplication.Database.Abstract.Abstract_Table_Manager;
 import com.example.kyle.myapplication.Database.DBOperation;
 import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink;
 import com.example.kyle.myapplication.Database.IncidentLink.Tbl_IncidentLink_Manager;
-import com.example.kyle.myapplication.Database.Role.Tbl_Role;
+import com.example.kyle.myapplication.Database.SubmittedForms.Tbl_SubmittedForms;
+import com.example.kyle.myapplication.Database.SubmittedForms.Tbl_SubmittedForms_Manager;
+import com.example.kyle.myapplication.Helpers.FTPManager;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,11 +51,26 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
                     {
                         Tbl_IncidentLink incidentLink = record.incidentLinks.get(i);
                         incidentLink.incidentID = operation.ResultID;
-                        incidentLink.sqlMode = record.sqlMode;
+                        incidentLink.sqlMode = Abstract_Table.SQLMode.INSERT;
                         DBOperation resultOperation = Tbl_IncidentLink_Manager.current.RecordOperation(incidentLink);
                         if (resultOperation.ResultID == -1)
                         {
                             break;
+                        }
+                    }
+                    for (int i = 0; i < record.submittedForms.size(); i++)
+                    {
+                        Tbl_SubmittedForms form = record.submittedForms.get(i);
+                        form.incidentID = operation.ResultID;
+                        form.sqlMode = Abstract_Table.SQLMode.INSERT;
+                        DBOperation resultOperation = Tbl_SubmittedForms_Manager.current.RecordOperation(form);
+                        if (resultOperation.ResultID == -1)
+                        {
+                            break;
+                        }
+                        if (!form.saveFileLocation.isEmpty())
+                        {
+                            FTPManager.UploadDownloadFile(context, FTPManager.FTPMode.UPLOAD, form.saveFileLocation, form.fileName);
                         }
                     }
                 }
@@ -73,13 +86,32 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
                     }
                     Tbl_IncidentLink_Manager.current.RecordOperation(incidentLink);
                 }
+                for (int i = 0; i < record.submittedForms.size(); i++)
+                {
+                    Tbl_SubmittedForms form = record.submittedForms.get(i);
+                    if (form.sqlMode == Abstract_Table.SQLMode.INSERT)
+                    {
+                        form.incidentID = record.incidentID;
+                    }
+                    Tbl_SubmittedForms_Manager.current.RecordOperation(form);
+                    if (!form.saveFileLocation.isEmpty())
+                    {
+                        FTPManager.UploadDownloadFile(context, FTPManager.FTPMode.UPLOAD, form.saveFileLocation, form.fileName);
+                    }
+                }
                 break;
             case DELETE:
                 for (int i = 0; i < record.incidentLinks.size(); i++)
                 {
                     Tbl_IncidentLink incidentLink = record.incidentLinks.get(i);
-                    incidentLink.sqlMode = record.sqlMode;
+                    incidentLink.sqlMode = Abstract_Table.SQLMode.DELETE;
                     Tbl_IncidentLink_Manager.current.RecordOperation(incidentLink);
+                }
+                for (int i = 0; i < record.submittedForms.size(); i++)
+                {
+                    Tbl_SubmittedForms form = record.submittedForms.get(i);
+                    form.sqlMode = Abstract_Table.SQLMode.DELETE;
+                    Tbl_SubmittedForms_Manager.current.RecordOperation(form);
                 }
                 operation = super.RecordOperation(context, record, SuccessMessage, FailMessage);
                 break;
@@ -88,31 +120,6 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
         return operation;
     }
 
-    /*
-        @Override
-        public boolean Update(Tbl_Incident toUpdate)
-        {
-            super.Update(db, toUpdate);
-            for (int i = 0; i < toUpdate.incidentLinks.size(); i++)
-            {
-                Tbl_IncidentLink incidentLink = toUpdate.incidentLinks.get(i);
-                switch (incidentLink.sqlMode)
-                {
-                    case INSERT:
-                        incidentLink.incidentID = toUpdate.incidentID;
-                        Tbl_IncidentLink_Manager.current.Insert(db, incidentLink);
-                        break;
-                    case DELETE:
-                        Tbl_IncidentLink_Manager.current.Delete(db, incidentLink);
-                        break;
-                    case UPDATE:
-                        Tbl_IncidentLink_Manager.current.Update(db, incidentLink);
-                        break;
-                }
-            }
-            return true;
-        }
-*/
     @Override
     public String GetPrimaryKey()
     {
@@ -182,6 +189,11 @@ public class Tbl_Incident_Manager extends Abstract_Table_Manager<Tbl_Incident>
                 Tbl_IncidentLink incidentLink = new Tbl_IncidentLink();
                 incidentLink.incidentID = record.incidentID;
                 record.incidentLinks = Tbl_IncidentLink_Manager.current.Select(incidentLink);
+
+                //get the submitted forms for this record
+                Tbl_SubmittedForms submittedForm = new Tbl_SubmittedForms();
+                submittedForm.incidentID = record.incidentID;
+                record.submittedForms = Tbl_SubmittedForms_Manager.current.Select(submittedForm);
                 resultList.add(record);
             }
         }

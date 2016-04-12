@@ -84,9 +84,6 @@ public class DataList extends AppCompatActivity
             case TEMPLATES:
                 valueList = new ArrayList<Abstract_Table>(Tbl_Templates_Manager.current.Select());
                 break;
-            case SUBMITTEDFORMS:
-                //valueList = new ArrayList<Abstract_Table>(Tbl_SubmittedForms_Manager.current.Select(db.getReadableDatabase()));
-                break;
         }
 
         String noDataMessage = inEditMode() ? "No data to edit" : "No data to delete";
@@ -133,8 +130,6 @@ public class DataList extends AppCompatActivity
                             case TEMPLATES:
                                 OpenScreens.OpenUploadTemplateScreen((Tbl_Templates) DataList.selectedRecord);
                                 break;
-                            case SUBMITTEDFORMS:
-                                break;
                         }
                         finish();
                     }
@@ -165,9 +160,6 @@ public class DataList extends AppCompatActivity
                                         break;
                                     case TEMPLATES:
                                         resultOperation = Tbl_Templates_Manager.current.RecordOperation(DataList.this, (Tbl_Templates) selectedRecord, successMessage, failMessage);
-                                        break;
-                                    case SUBMITTEDFORMS:
-                                        //resultOperation = Tbl_SubmittedForms_Manager.current.RecordOperation(DataList.this, (Tbl_SubmittedForms)  selectedRecord, successMessage, failMessage);
                                         break;
                                 }
                                 if (resultOperation != null && resultOperation.Success())

@@ -115,7 +115,6 @@ public class CreateEditIncidentLinks extends AppCompatActivity
         Tbl_Role role = (Tbl_Role) cboRole.getSelectedItem();
         //note we are passing an incident id of 1 but this will get overwritten with whatever the current id is when we create the incident record
         Tbl_IncidentLink toAdd = new Tbl_IncidentLink(1, personnel, role, ranking);
-        toAdd.sqlMode = Abstract_Table.SQLMode.INSERT;
         String anyErrors = toAdd.customIsValidRecord(selectedListPosition, toAdd, CreateEditIncident.incidentLinks);
 
         if (anyErrors.isEmpty())
@@ -133,6 +132,7 @@ public class CreateEditIncidentLinks extends AppCompatActivity
             }
             else
             {
+                toAdd.sqlMode = Abstract_Table.SQLMode.INSERT;
                 CreateEditIncident.incidentLinks.add(toAdd);
                 incidentLinks.add(toAdd);
             }

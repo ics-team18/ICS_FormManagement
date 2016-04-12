@@ -8,7 +8,7 @@ import com.example.kyle.myapplication.Database.Role.Tbl_Role;
  */
 public class Tbl_Templates extends Abstract_Table
 {
-    public long templatesID = -1;
+    public long templateID = -1;
     public long roleID = -1;
     public String description = "";
     public String fileName = "";
@@ -18,9 +18,9 @@ public class Tbl_Templates extends Abstract_Table
     {
     }
 
-    public Tbl_Templates(long templatesID)
+    public Tbl_Templates(long templateID)
     {
-        this.templatesID = templatesID;
+        this.templateID = templateID;
     }
 
     public Tbl_Templates(long roleID, String description, String fileName)
@@ -70,7 +70,7 @@ public class Tbl_Templates extends Abstract_Table
     @Override
     public String getDataGridPopupMessageValue()
     {
-        return "ID: " + Long.toString(this.templatesID) + "\n" +
+        return "ID: " + Long.toString(this.templateID) + "\n" +
                 "Role: " + this.role.title + "\n" +
                 "Description: " + this.description + "\n" +
                 "File Name: " + this.fileName;
